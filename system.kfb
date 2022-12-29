@@ -17,6 +17,7 @@ tumor_sintomas(dolor, sintoma)
 
 tumor_tratamiento(quimio, tratamiento)
 tumor_tratamiento(cirugia, tratamiento)
+tumor_tratamiento(radio, tratamiento)
 tumor_tratamiento(cuidados_paliativos, tratamiento)
 
 tumor_etapa(avascular, etapa)
