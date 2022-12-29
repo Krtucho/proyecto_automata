@@ -1,10 +1,23 @@
 # system.tumor_organ()
 # system.tumor_tejido()
+# system.tumor_sintomas()
+# system.tumor_tratamiento()
+# system.tumor_etapa()
 
 tumor_organ(cerebro, organ)
 tumor_organ(higado, organ)
 tumor_organ(pancreas, organ)
 tumor_organ(mama, organ)
 tumor_organ(ovarios, organ)
+tumor_organ()
 
 tumor_tejido(epitelio, tejido)
+
+tumor_sintomas(dolor, sintoma)
+
+tumor_tratamiento(quimio, tratamiento)
+tumor_tratamiento(cirugia, tratamiento)
+tumor_tratamiento(cuidados_paliativos, tratamiento)
+
+tumor_etapa(avascular, etapa)
+tumor_etapa(vascular, etapa)
