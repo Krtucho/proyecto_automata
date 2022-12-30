@@ -1,0 +1,5 @@
+has_symptom_tumor
+    use has_symptom($tumor, $symptom, $relationship)
+    when
+        system.tumor_sintomas($tumor, $symptom)
+        $relationship = "da"
