@@ -42,13 +42,14 @@
 import contextlib
 import sys
 import time
+from markupsafe import string
 
 from pyke import knowledge_engine, krb_traceback, goal
 
 # Compile and load .krb files in same directory that I'm in (recursively).
 engine = knowledge_engine.engine(__file__)
 
-fc_goal = goal.compile('system.has_symptom($tumor, $symptom, $relationship)')
+fc_goal = goal.compile('system.has_related($name, $alias, $relationship)')
 
 def fc_test(person1 = 'bruce'):
     '''
@@ -73,7 +74,60 @@ def fc_test(person1 = 'bruce'):
     print("fc time %.2f, %.0f asserts/sec" % \
           (fc_time, engine.get_kb('family').get_stats()[2] / fc_time))
 
-def bc_test(person1 = 'bruce'):
+# BEGIN ********************************************** Searching types *******************************
+def is_category(category) -> bool:
+    with engine.prove_goal(
+               'bc_system.has_related($category, $alias, $relationship)',
+               category=category) \
+        as gen:
+            if gen:
+                for vars, plan in gen:
+                    print("%s, %s are %s" % \
+                        (category, vars['alias'], vars['relationship']))
+                    return True
+    return False
+
+def is_relationship(relationship) -> bool:
+    with engine.prove_goal(
+               'bc_system.has_related($category, $alias, $relationship)',
+               relationship=relationship) \
+        as gen:
+            if gen:
+                for vars, plan in gen:
+                    print("%s, %s are %s" % \
+                        (vars['category'], vars['alias'], relationship))
+                    return True
+    return False
+
+def search_type(chunk) -> str:
+    if is_category(chunk):
+        return "cat"
+    if is_relationship(chunk):
+        return "rel"
+    else:
+        return "term"
+
+# END ********************************************** Searching types *******************************
+
+# BEGIN ********************************************** Searching types *******************************
+def search_for_category(category): # Returns
+    result = []
+    with engine.prove_goal(
+               'bc_system.has_related($category1, $category2, $relationship)',
+               category1=category) \
+        as gen:
+            if gen:
+                for vars, plan in gen:
+                    print("%s, %s are %s" % \
+                        (vars['category'], vars['alias'], vars["relationship"]))
+                    result.append(vars)
+    return result
+
+def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None, left_chunk_rel=None): # La idea en este punto es buscar como se relaciona el chunk actual con el anterior, si es el 1er chunk entonces solamente habra que buscar en donde aparece relacionado con alguien
+    pass
+# END ********************************************** Searching types *******************************
+
+def bc_test(person1 = 'bruce', chunks=[]):
     engine.reset()      # Allows us to run tests multiple times.
 
     start_time = time.time()
@@ -83,14 +137,29 @@ def bc_test(person1 = 'bruce'):
 
     print("doing proof")
     try:
-        with engine.prove_goal(
-               'bc_system.has_symptom($tumor, $symptom, $relationship)',
-               symptom=person1) \
-          as gen:
-            for vars, plan in gen:
-                print("%s, %s are %s" % \
-                        (person1, vars['tumor'], vars['relationship']))
-    except Exception:
+        # For a traves de todos los chunks buscando su tipo: Los tipos son Categoria, Relacion, Termino
+        chunk_types = [search_type(chunk) for chunk in chunks] 
+
+        #Luego de hallar los tipos itero por cada uno y veo si se puede relacionar con el anterior
+        relationships = []
+        for index, chunk in enumerate(chunks):
+            if index == 0:
+                relationships[index] = check_relationship(chunk, chunk_types[index])
+            else:
+                relationships[index] = check_relationship(chunk, chunk_types[index], chunks[index-1], chunk_types[index-1], relationships[index-1])
+
+        # Luego de hallar las relaciones existentes entre cada chunk y su anterior, se supone que obtengamos las relaciones que existen entre todos los chunks en general 
+        
+        # actual = chunks[2]
+        # with engine.prove_goal(
+        #        'bc_system.has_related($name, $alias, $relationship)',
+        #        name=actual) \
+        #   as gen:
+        #     for vars, plan in gen:
+        #         print("%s, %s are %s" % \
+        #                 (actual, vars['alias'], vars['relationship']))
+    except Exception as e:
+        print(e)
         # This converts stack frames of generated python functions back to the
         # .krb file.
         krb_traceback.print_exc()

@@ -1,5 +1,18 @@
+# Existe relacion
+has_related_cat_cat
+    use has_related($category1, $category2, $relationship)
+    when
+        system.relation_cat_cat($category1, $category2, $relationship)
+
+# Relacion tumor-sintoma
 has_symptom_tumor
     use has_symptom($tumor, $symptom, $relationship)
     when
         system.tumor_sintomas($tumor, $symptom)
-        $relationship = "da"
+        $relationship = "presenta"
+
+has_related_category    # Busca si un nombre(name) pertenece a alguna de las categorias(alias)
+    use has_related($category, $alias, $relationship)
+    when
+        system.category_name($category, $alias)
+        $relationship = "True"

@@ -6,6 +6,29 @@
 
 # system.tumor_sintomas(symptom, tumor)
 
+# Nombres de categorias
+# system.category_name(category, alias)
+
+# Relaciones Binarias de categorias
+# system.relation_cat_cat(category1, category2, relationship)
+
+# Nombres de categorias
+category_name(organo, alias)
+category_name(tejido, alias)
+category_name(sintoma, alias)
+category_name(tratamiento, alias)
+category_name(proceso, alias)
+category_name(etapa, alias)
+category_name(cancer, alias)
+
+# TODO: Crear nombres semejantes a los nombres en singular, por ejemplo crear sintomas para referirse a sintoma
+category_name_type(sintomas, sintoma)
+
+# TODO: Crear relacion cancer,tumor-organ
+
+# Relaciones Binarias de categorias
+relation_cat_cat(cancer, sintoma, presenta)
+
 
 category(cerebro, organ)
 category(higado, organ)
