@@ -77,7 +77,7 @@ def fc_test(person1 = 'bruce'):
 # BEGIN ********************************************** Searching types *******************************
 def is_category(category) -> bool:
     with engine.prove_goal(
-               'bc_system.has_related($category, $alias, $relationship)',
+               'bc_system.has_alias($category, $alias, $relationship)',
                category=category) \
         as gen:
             if gen:
@@ -110,21 +110,63 @@ def search_type(chunk) -> str:
 # END ********************************************** Searching types *******************************
 
 # BEGIN ********************************************** Searching types *******************************
-def search_for_category(category): # Returns
+def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): # Returns
     result = []
-    with engine.prove_goal(
-               'bc_system.has_related($category1, $category2, $relationship)',
-               category1=category) \
-        as gen:
-            if gen:
-                for vars, plan in gen:
-                    print("%s, %s are %s" % \
-                        (vars['category'], vars['alias'], vars["relationship"]))
-                    result.append(vars)
+    if category1:
+        with engine.prove_goal(
+                'bc_system.has_related($category1, $category2, $relationship)',
+                category1=category1) \
+            as gen:
+                if gen:
+                    for vars, plan in gen:
+                        print("%s, %s are %s" % \
+                            (vars['category1'], vars['category2'], vars["relationship"]))
+                        result.append((vars['category2'], vars["relationship"]))
+
+        with engine.prove_goal(
+                'bc_system.has_related($category1, $category2, $relationship)',
+                category2=category1) \
+            as gen:
+                if gen:
+                    for vars, plan in gen:
+                        print("%s, %s are %s" % \
+                            (vars['category1'], vars['category2'], vars["relationship"]))
+                        result.append((vars['category1'], vars["relationship"]))
+    if relationship:
+        with engine.prove_goal(
+                'bc_system.has_related($category1, $category2, $relationship)',
+                relationship=relationship) \
+            as gen:
+                if gen:
+                    for vars, plan in gen:
+                        print("%s, %s are %s" % \
+                            (vars['category1'], vars['category2'], vars["relationship"]))
+                        result.append((vars['category2'], vars["relationship"]))
+
+        # with engine.prove_goal(
+        #         'bc_system.has_related($category1, $category2, $relationship)',
+        #         relationship=relationship) \
+        #     as gen:
+        #         if gen:
+        #             for vars, plan in gen:
+        #                 print("%s, %s are %s" % \
+        #                     (vars['category1'], vars['category2'], vars["relationship"]))
+        #                 result.append((vars['category1'], vars["category2"]))
     return result
 
 def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None, left_chunk_rel=None): # La idea en este punto es buscar como se relaciona el chunk actual con el anterior, si es el 1er chunk entonces solamente habra que buscar en donde aparece relacionado con alguien
-    pass
+    if left_chunk:
+        pass
+    else:
+        if chunk_type == "cat":
+            relationships = search_for_cat_cat_rel(category1=chunk)
+            print(relationships)
+        elif chunk_type == "rel":
+            pass
+        else:
+            # Look if this chunk belogs to any category
+            pass
+
 # END ********************************************** Searching types *******************************
 
 def bc_test(person1 = 'bruce', chunks=[]):

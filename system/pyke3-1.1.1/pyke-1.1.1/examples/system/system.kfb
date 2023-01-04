@@ -12,6 +12,9 @@
 # Relaciones Binarias de categorias
 # system.relation_cat_cat(category1, category2, relationship)
 
+# Cierto elemento pertenece a cierta categoria
+# system.category(name, category)
+
 # Nombres de categorias
 category_name(organo, alias)
 category_name(tejido, alias)
