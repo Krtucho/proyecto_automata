@@ -6,6 +6,17 @@ has_related_cat_cat
         #system.relation_cat_cat($category2, $category1, $relationship)
         #check $category1 != $category2
 
+tumor_organ
+    use tumor_has_organ()
+    when
+        system.relation_tumor_organ()
+
+# Relacion sintoma tumor_organ
+sintoma_tumor_organ
+    use has_symptom_tumor()
+    when 
+        tumor_organ()
+
 # Relacion tumor-sintoma
 has_symptom_tumor
     use has_symptom($tumor, $symptom, $relationship)
@@ -20,7 +31,7 @@ has_related_name_category    # Busca si un nombre(name) pertenece a alguna de la
         system.category($name, $category)
         $relationship = "Pertenece"
 
-has_related_category    # Busca si un nombre(name) pertenece a alguna de las categorias(alias)
+has_related_category    # Busca si un nombre(name) es alguna de las categorias(alias) definidas
     use has_alias($category, $alias, $relationship)
     when
         system.category_name($category, $alias)

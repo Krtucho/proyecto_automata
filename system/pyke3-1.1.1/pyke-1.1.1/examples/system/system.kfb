@@ -12,6 +12,9 @@
 # Relaciones Binarias de categorias
 # system.relation_cat_cat(category1, category2, relationship)
 
+# Relacion tumor organo
+# system.relation_tumor_organ(tumor, organ)
+
 # Cierto elemento pertenece a cierta categoria
 # system.category(name, category)
 
@@ -28,6 +31,7 @@ category_name(cancer, alias)
 category_name_type(sintomas, sintoma)
 
 # TODO: Crear relacion cancer,tumor-organ
+relation_tumor_organ(cancer, pancreas)
 
 # Relaciones Binarias de categorias
 relation_cat_cat(cancer, sintoma, presenta)
