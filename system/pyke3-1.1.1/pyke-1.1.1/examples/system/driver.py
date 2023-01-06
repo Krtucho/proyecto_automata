@@ -40,9 +40,11 @@
 
 
 import contextlib
+from nis import cat
 import sys
 import time
 from markupsafe import string
+from numpy import var
 
 from pyke import knowledge_engine, krb_traceback, goal
 
@@ -165,7 +167,8 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
                     for vars, plan in gen:
                         print("%s, %s are %s" % \
                             (vars['category1'], vars['category2'], vars["relationship"]))
-                        result.append((vars['category2'], vars["relationship"]))
+                        # result.append((vars['category2'], vars["relationship"]))
+                        result.append(vars)
 
         # with engine.prove_goal(
         #         'bc_system.has_related($category1, $category2, $relationship)',
@@ -180,6 +183,7 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
 
 def belongs_to_category(chunk):
     result = []
+    belongs = None
     with engine.prove_goal(
             'bc_system.has_category($name, $category, $relationship)',
             name=chunk) \
@@ -188,8 +192,10 @@ def belongs_to_category(chunk):
                 for vars, plan in gen:
                     print("%s, %s are %s" % \
                         (vars['name'], vars['category'], vars["relationship"]))
-                    result.append((vars['category'], vars["relationship"]))
-    return result
+                    # result.append((vars['category'], vars["relationship"]))
+                    result.append(vars)
+                    belongs = vars['category']
+    return result, belongs
 
 def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None, left_chunk_rel=None): # La idea en este punto es buscar como se relaciona el chunk actual con el anterior, si es el 1er chunk entonces solamente habra que buscar en donde aparece relacionado con alguien
     relationships = []
@@ -205,7 +211,7 @@ def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None,
             print(relationships)
         else:
             # Look if this chunk belogs to any category
-            relationships = belongs_to_category(chunk)
+            relationships = belongs_to_category(chunk)[0]
     else:
         if chunk_type == "cat":
             relationships = search_for_cat_cat_rel(category1=chunk)
@@ -215,7 +221,7 @@ def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None,
             print(relationships)
         else:
             # Look if this chunk belogs to any category
-            relationships = belongs_to_category(chunk)
+            relationships = belongs_to_category(chunk)[0]
 
     return relationships
 
@@ -230,7 +236,8 @@ def search_instance_category(chunk):
                 for vars, plan in gen:
                     print("%s, %s are %s" % \
                         (vars['name'], vars['category'], vars["relationship"]))
-                    result.append((vars['category'], vars["relationship"]))
+                    # result.append((vars['category'], vars["relationship"]))
+                    result.append(vars)
     return result
 
 # def search_instance_term(chunk):
@@ -244,11 +251,11 @@ def create_basic_chunk_type(chunk, chunk_type)-> Chunk:
         return CatChunk(chunk,cat_instances=relationships)
     elif chunk_type == "term":
         # Look if this chunk belogs to any category
-        relationships = belongs_to_category(chunk)
-        return TermChunk()
+        relationships = belongs_to_category(chunk)[0]
+        return TermChunk(chunk,term_instances=relationships)
     elif chunk_type == "rel":
         relationships = search_for_cat_cat_rel(relationship=chunk)
-        return RelChunk()
+        return RelChunk(chunk, rel_instances=relationships)
 # END ********************************************** Chunk's Types *******************************
 
 def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> RelCatTermChunk:
@@ -288,12 +295,16 @@ def bc_test(person1 = 'bruce', chunks=[]):
                 term_chunk = left_chunk if left_chunk_type == "term" else right_chunk
 
                 if ( left_chunk_type == "cat" and right_chunk_type == "term") or (left_chunk_type == "term" and right_chunk_type == "cat"): # Si tengo la combinacion Cat-Term o Term-Cat:
+                    
+                    term_instances, terms_cat = belongs_to_category(term_chunk)
+                    
                     relationships.append(CatTermChunk(left_chunk, right_chunk,  left_chunk_type, right_chunk_type,
                     cat_chunk,
                     term_chunk,
                     search_instance_category(cat_chunk), # Hechos de la categoria
                     None,
-                    belongs_to_category(term_chunk),    # Hechos del termino
+                    term_instances,    # Hechos del termino
+                    terms_cat
                     ))
                     index += 2
                 else:
@@ -321,7 +332,17 @@ def bc_test(person1 = 'bruce', chunks=[]):
                 elif index == len(relationships) -1:
                     relationship = make_relationships(relationships[index])
                 else:
+                    left_chunk = relationships[index-1]
+                    right_chunk = relationships[index+1]
+
+                    
+                    if not left_chunk.chunk_type in types:
+                        left_chunk = None
+                    if not right_chunk.chunk_type in types:
+                        right_chunk = None
                     relationship = make_relationships(relationships[index])
+            else:
+                index += 1
 
 
         # for index, chunk in enumerate(chunks):

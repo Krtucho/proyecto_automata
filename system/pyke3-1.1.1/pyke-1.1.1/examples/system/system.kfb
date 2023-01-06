@@ -18,6 +18,9 @@
 # Cierto elemento pertenece a cierta categoria
 # system.category(name, category)
 
+# Relacion para nombres que significan lo mismo
+# system.type_alias(name, alias)
+
 # Nombres de categorias
 category_name(organo, alias)
 category_name(tejido, alias)
@@ -26,6 +29,9 @@ category_name(tratamiento, alias)
 category_name(proceso, alias)
 category_name(etapa, alias)
 category_name(cancer, alias)
+
+# Relacion para nombres que significan lo mismo
+# system.type_alias(tumor, cancer)
 
 # TODO: Crear nombres semejantes a los nombres en singular, por ejemplo crear sintomas para referirse a sintoma
 category_name_type(sintomas, sintoma)
