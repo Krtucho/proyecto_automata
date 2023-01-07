@@ -18,8 +18,14 @@
 # Cierto elemento pertenece a cierta categoria
 # system.category(name, category)
 
-# Relacion para nombres que significan lo mismo
+# Relacion para nombres de categoria que significan lo mismo
 # system.type_alias(name, alias)
+
+# Relaciones para nombres de relaciones que significan lo mismo
+# system.type_relationship(name, relationship)
+
+# Relaciones para terminos que significan lo mismo
+# system.type_terms(name, term)
 
 # Relacion cancer-sintoma
 # system.cancer_sintoma(cancer, sintoma)
@@ -33,23 +39,30 @@ category_name(proceso, alias)
 category_name(etapa, alias)
 category_name(cancer, alias)
 
-# Relacion para nombres que significan lo mismo
-# system.type_alias(tumor, cancer)
+# Relacion para nombres de categoria que significan lo mismo
+type_alias(tumor, cancer)
 
 # TODO: Crear nombres semejantes a los nombres en singular, por ejemplo crear sintomas para referirse a sintoma
-category_name_type(sintomas, sintoma)
+type_alias(sintomas, sintoma)
+
+# Relaciones para nombres de relaciones que significan lo mismo
+type_relationship(presenta, presentar)
+type_relationship(contiene, presentar)
+
+# Relaciones para terminos que significan lo mismo
+type_terms(name, term)
 
 # TODO: Crear relacion cancer,tumor-organ
 relation_tumor_organ(cancer, pancreas)
 
 # Relaciones Binarias de categorias
-relation_cat_cat(cancer, sintoma, presenta)
-relation_cat_cat(sintoma, cancer, presenta)
+relation_cat_cat(cancer, sintoma, presentar)
+relation_cat_cat(sintoma, cancer, presentar)
 
 
 # Relacion organo-sintoma
-relation_cat_cat(organ, sintoma, presenta)
-relation_cat_cat(sintoma, organ, presenta)
+relation_cat_cat(organ, sintoma, presentar)
+relation_cat_cat(sintoma, organ, presentar)
 
 
 # Relacion cancer-sintoma

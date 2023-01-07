@@ -3,9 +3,11 @@ from relationship import Relationship
 class Chunk:
     def __init__(self) -> None:
         self.relationships = []
+        self.chunk = ""
+        self.chunk_type = ""
 
     def __str__(self) -> str:
-        output:str = ""
+        output:str = f"{self.chunk}:\n"
         for relationship in self.relationships:
             output += f"{relationship}\n"
         return output
@@ -16,6 +18,11 @@ class CatChunk(Chunk):
         self.chunk_type = "cat"
         self.instances = cat_instances
         self.relationships = self.instances
+
+class CatCatChunk(Chunk):
+    def __init__(self, left_cat:CatChunk, right_cat:CatChunk, cat_relationships: list) -> None:
+        self.chunk = f"{left_cat.chunk} {right_cat.chunk}"
+        self.relationships = cat_relationships
 
 class TermChunk(Chunk):
     def __init__(self, chunk, term_instances=None, cat=None) -> None:
@@ -52,3 +59,4 @@ class CatTermChunk(Chunk):
 class RelCatTermChunk(Chunk):
     def __init__(self, relationships) -> None:
         self.relationships = relationships
+        self.chunk_type = "rel_cat_term"

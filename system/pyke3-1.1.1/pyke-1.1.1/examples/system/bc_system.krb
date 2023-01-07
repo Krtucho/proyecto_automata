@@ -28,7 +28,7 @@ has_symptom_tumor
     use has_symptom($tumor, $symptom, $relationship)
     when
         system.tumor_sintomas($tumor, $symptom)
-        $relationship = "presenta"
+        $relationship = "presentar"
 
 #has_related_cat_cat_term
 #    use
@@ -67,11 +67,17 @@ has_symptom_tumor
 # Utilizando has_cat_cat_rel se puede encontrar relacion e instancias entre cat_term y cat
 # Para este caso se asume que instance1=sintoma e instance2=tumor
 # cat_term=category1 cat=category2
-has_symptom_organ_term_cat
+#has_symptom_organ_term_cat
+#    use has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)
+#    when
+#        has_related($category1,$category2,$relationship)
+#        has_symptom($instance1, $instance2, relationship)
+
+has_symptom_organ_cat_term
     use has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)
     when
         has_related($category1,$category2,$relationship)
-        has_symptom($instance2, $instance1, $relationship)
+        has_symptom($instance1, $instance2, $relationship)
 
 # Relacion cierto nombre pertenece a cierta categoria
 has_related_name_category    # Busca si un nombre(name) pertenece a alguna de las categorias(alias)
@@ -79,4 +85,38 @@ has_related_name_category    # Busca si un nombre(name) pertenece a alguna de la
     when
         system.category($name, $category)
         $relationship = "Pertenece"
+
+# Relaciones entre nombres similares o sinonimos (metodos que iran buscando recursivamente a quien hacen referencia)
+
+# Relacion nombre de alias
+has_recurrent_alias_o
+    use has_recurrent_alias($old_category, $category, $alias, $relationship)
+    when
+        system.type_alias($old_category, $category)
+        has_alias($category, $alias, $relationship)
+
+has_recurrent_alias_no
+    use has_recurrent_alias($old_category, $category, $alias, $relationship)
+    when
+        has_alias($old_category, $alias, $relationship)
+        $category=$old_category
+
+# Relacion nombre de relationship
+has_recurrent_rel_o
+    use has_recurrent_rel($category1, $category2, $old_relationship, $relationship)
+    when
+        system.type_relationship($old_relationship, $relationship)
+        has_related($category1, $category2, $relationship)
+
+has_recurrent_rel_no
+    use has_recurrent_rel($category1, $category2, $old_relationship, $relationship)
+    when
+        has_related($category1, $category2, $old_relationship)
+        $relationship=$old_relationship
+
+# Relacion nombre de termino
+has_recurrent_term_no
+    use has_recurrent_term($name, $term)
+    when
+        system.type_term($name, $term)
 
