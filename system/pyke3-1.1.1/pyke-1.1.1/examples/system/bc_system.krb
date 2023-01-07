@@ -2,9 +2,15 @@
 has_related_cat_cat
     use has_related($category1, $category2, $relationship)
     when
-        system.relation_cat_cat($category1, $category2, $relationship) 
+        system.relation_cat_cat($category1, $category2, $relationship)
         #system.relation_cat_cat($category2, $category1, $relationship)
         #check $category1 != $category2
+
+has_related_category    # Busca si un nombre(name) es alguna de las categorias(alias) definidas
+    use has_alias($category, $alias, $relationship)
+    when
+        system.category_name($category, $alias)
+        $relationship = "True"
 
 #tumor_organ
 #    use tumor_has_organ()
@@ -24,6 +30,49 @@ has_symptom_tumor
         system.tumor_sintomas($tumor, $symptom)
         $relationship = "presenta"
 
+#has_related_cat_cat_term
+#    use
+#    when
+#        has_symptom_tumor($tumor, $symptom, $relationship)
+
+# Relaciona cat con cat-term
+#has_cat_term_rel_symptom
+#    use has_cat_term_rel($cat_term, $cat, $symptom, $tumor, $relationship)
+#    when
+#        has_related($cat_term,$cat,$relationship)
+#        has_symptom($tumor, $symptom, $relationship)
+
+# Relaciona cat con cat
+#has_cat_cat_rel_full
+#    use has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)
+#    when
+#        has_related($category1, $category2, $relationship)
+#        has_category($instance1, category1, rel1)
+#        has_category($instance2, category2, rel2)
+#        check category1 != category2
+
+# Relaciona cat con cat-term full
+#has_cat_cat_term_rel_full
+#    use has_cat_cat_term_rel(category1, category2, term, $instance, relationship)
+#    when
+#        has_related(category1, category2, rel1)
+#        has_related(categoty1, cat_term)
+#        has_related(category2, cat_term)
+#        has_category($instance, category1, relationship)
+
+
+
+# Este funciona !!!!!!!!!!!!!!!!!!!!!
+# Relacion sintoma-tumor o sintoma-organo al tener un sintoma que pertenece a la categoria sintoma y un organo que pertenece a la categoria organ
+# Utilizando has_cat_cat_rel se puede encontrar relacion e instancias entre cat_term y cat
+# Para este caso se asume que instance1=sintoma e instance2=tumor
+# cat_term=category1 cat=category2
+has_symptom_organ_term_cat
+    use has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)
+    when
+        has_related($category1,$category2,$relationship)
+        has_symptom($instance2, $instance1, $relationship)
+
 # Relacion cierto nombre pertenece a cierta categoria
 has_related_name_category    # Busca si un nombre(name) pertenece a alguna de las categorias(alias)
     use has_category($name, $category, $relationship)
@@ -31,8 +80,3 @@ has_related_name_category    # Busca si un nombre(name) pertenece a alguna de la
         system.category($name, $category)
         $relationship = "Pertenece"
 
-has_related_category    # Busca si un nombre(name) es alguna de las categorias(alias) definidas
-    use has_alias($category, $alias, $relationship)
-    when
-        system.category_name($category, $alias)
-        $relationship = "True"

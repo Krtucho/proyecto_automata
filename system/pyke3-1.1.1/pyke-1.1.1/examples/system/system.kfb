@@ -4,7 +4,7 @@
 # system.tumor_etapa()
 # system.tumor_frecuencia()
 
-# system.tumor_sintomas(symptom, tumor)
+# system.tumor_sintomas(tumor, symptom)
 
 # Nombres de categorias
 # system.category_name(category, alias)
@@ -20,6 +20,9 @@
 
 # Relacion para nombres que significan lo mismo
 # system.type_alias(name, alias)
+
+# Relacion cancer-sintoma
+# system.cancer_sintoma(cancer, sintoma)
 
 # Nombres de categorias
 category_name(organo, alias)
@@ -41,7 +44,16 @@ relation_tumor_organ(cancer, pancreas)
 
 # Relaciones Binarias de categorias
 relation_cat_cat(cancer, sintoma, presenta)
+relation_cat_cat(sintoma, cancer, presenta)
 
+
+# Relacion organo-sintoma
+relation_cat_cat(organ, sintoma, presenta)
+relation_cat_cat(sintoma, organ, presenta)
+
+
+# Relacion cancer-sintoma
+cancer_sintoma(dolor, tumor)
 
 category(cerebro, organ)
 category(higado, organ)
