@@ -39,9 +39,56 @@ def exp_tokenization(expresion):
 def exp_relacion(strings):
     pass
 
-def buscar_tabla(pareja, dicc_enfermedad_parametro):
+def buscar_tabla(pareja, dicc_enfermedad_parametro, parametro):
     if not pareja in documentation:
-        pass
+        lista_filas=[]
+        dicc_parametro_indice=[]
+        filas_filtradas=[]
+        dicc={}
+        frec_acum=0
+
+
+        for item in dicc_enfermedad_parametro.keys():
+            nombre=item+'_'+parametro
+            if nombre in documentation:
+                with open(documentation[nombre], newline='') as f:
+                    reader = csv.reader(f)
+                    for row in reader:
+                        lista_filas.append(row)
+                        print(row)
+                for var in dicc_enfermedad_parametro[item]:
+                    if var in lista_filas[0]:
+                        dicc_parametro_indice.append(var)
+                    # for var1 in range(0,lista_filas[0]):
+                    #     if var ==lista_filas[0][var1]:
+
+                print(dicc_parametro_indice)
+
+                for row in range(0, len(lista_filas)):
+                    if not row == 0:
+                        for var in range(0,len(lista_filas[row])-2):
+                            #si el valor del parametro en fila, columna es = 1 y ese parametro se enuentra en los parametros que me interesa entonces guardo esa fila
+                            if lista_filas[row][var] == '1' and lista_filas[0][var] in dicc_parametro_indice:
+                                filas_filtradas.append(lista_filas[row])
+                                break
+
+                print(filas_filtradas)
+
+                for filter_row in filas_filtradas:
+                    dicc[str(filter_row)]=[]
+                    lenght=len(filter_row)
+
+                    frec_acum+=(int)(filter_row[lenght-2])
+
+                    for para in range(0,len(filter_row)-2):
+                        if filter_row[para]=='1':
+                            dicc[str(filter_row)].append(lista_filas[0][para])
+
+                for row in filas_filtradas:
+                    print(dicc[str(row)])
+                    print((int)(row[len(row)-2])/frec_acum)
+
+
     else:
         #lista donde se guarda la informacion de los sintomas mas frecuentes
         lista=[]
@@ -86,6 +133,24 @@ def buscar_tabla(pareja, dicc_enfermedad_parametro):
                 
     pass
 
+def normalize(lista_palabras):
+    word_list=[]
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+        ("ñ", "nn"),
+    )
+    for s in lista_palabras:
+        for a, b in replacements:
+            s = s.replace(a, b).replace(a.upper(), b.upper())
+        word_list.append(s)
+    return word_list
+
+
+
 def main():
 
     # with open('tumor_pancrea_sintomas.csv', 'w', newline='') as csvfile:
@@ -103,10 +168,19 @@ def main():
     #     writer.writerow({'sintoma1': '1', 'sintoma2': '1','sintoma3': '0', 'fr_Enf': 'n','fr_no_Enf': 'n'})
     #     writer.writerow({'sintoma1': '1', 'sintoma2': '1','sintoma3': '1', 'fr_Enf': 'n','fr_no_Enf': 'n'})
 
+    lista=['¡Hólá','múndó','pequeño']
+    print(normalize(lista))
+    # print(normalize("¡Hólá, múndó pequeño!"))
+    # print(normalize("¡HÓLÁ, MÚNDÓ!"))
+
     documentation['tumor_pancrea_sintomas']='tumor_pancrea_sintomas.csv'
     documentation['tumor_pancrea_tratamientos']='tumor_pancrea_tratamientos.csv'
     documentation['tumor_pancrea_etapas']='tumor_pancrea_etapas.csv'
+
+    dicc_enfermedad_parametro={}
+    dicc_enfermedad_parametro['tumor_pancrea']=['sintoma1', 'sintoma2']
+
     
-    buscar_tabla('tumor_pancrea_sintomas')
+    buscar_tabla('tumor_ovarios_sintomas', dicc_enfermedad_parametro,'sintomas')
 
 main()
