@@ -53,6 +53,22 @@ class PreprocessText():
         targets = ["NOUN", "VERB"]
         return [(t,l,p) for (t,l,p) in PreprocessText.tokenize_and_tag_sent(sent) if p in targets]
     
+    @staticmethod
+    def normalize(lista_palabras):
+        word_list=[]
+        replacements = (
+            ("á", "a"),
+            ("é", "e"),
+            ("í", "i"),
+            ("ó", "o"),
+            ("ú", "u"),
+            ("ñ", "nn"),
+        )
+        for s in lista_palabras:
+            for a, b in replacements:
+                s = s.replace(a, b).replace(a.upper(), b.upper())
+            word_list.append(s)
+        return word_list
     # @staticmethod
     # def process_text(text: str):
     #     return [(t,l,p) for (t,l,p) in (PreprocessText.get_verbs_and_nouns(sent) for sent in PreprocessText.sentence_segmentation(text))]

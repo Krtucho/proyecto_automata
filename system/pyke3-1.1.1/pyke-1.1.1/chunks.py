@@ -15,7 +15,7 @@ class CatChunk(Chunk):
         self.chunk = chunk
         self.chunk_type = "cat"
         self.instances = cat_instances
-        self.relationships = cat_relationships
+        self.relationships = self.instances
 
 class TermChunk(Chunk):
     def __init__(self, chunk, term_instances=None, cat=None) -> None:
@@ -23,12 +23,14 @@ class TermChunk(Chunk):
         self.chunk_type = "term"
         self.term_instances = term_instances
         self.cat = cat
+        self.relationships = self.instances
 
 class RelChunk(Chunk):
     def __init__(self, chunk, rel_instances) -> None:
         self.chunk = chunk
         self.chunk_type = "rel"
         self.rel_instances = rel_instances
+        self.relationships = []
 
 class CatTermChunk(Chunk):
     def __init__(self, left_chunk, right_chunk, left_chunk_type, right_chunk_type, cat_chunk, term_chunk, cat_instances, cat_relationships, term_instances, terms_cat) -> None:
@@ -48,5 +50,5 @@ class CatTermChunk(Chunk):
         self.terms_cat = terms_cat
 
 class RelCatTermChunk(Chunk):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, relationships) -> None:
+        self.relationships = relationships

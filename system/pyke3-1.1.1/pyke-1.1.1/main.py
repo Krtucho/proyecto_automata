@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/krtucho/School/IA+Sim/github/proyecto_automata/pyke3-1.1.1/pyke-1.1.1')
+sys.path.append('your_path')
 
 import examples.system.driver as driver
 
@@ -15,7 +15,14 @@ for sentence in sentences:
 
 # Para los casos de palabras compuestas, tendremos que tomar el chunk como una, ej
 # Dolor de algo......Se hace necesario tomar un chunk como ambas palabras unidas
+# Annadir en archivo preprocess.py un metodo que filtre un chunk por reglas
+# @staticmethod
+# def filter_by_rules(tokens:list, rules:dict):
+# Se espera que list sean un 2-grama o 3-grama, o n-grama
+#   target = "".join(_,tokens)
+#   return rules[target] != None
 # uses bc_example.krb
 
 for chunks in chunks_list:
-    driver.bc_test('dolor_en_abdomen', chunks) 
+    words = [l for (w,l,p) in chunks]    
+    driver.bc_test('dolor_en_abdomen', PreprocessText.normalize(words)) 
