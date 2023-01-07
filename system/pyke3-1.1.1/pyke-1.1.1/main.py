@@ -13,9 +13,13 @@ import examples.system.driver as driver
 # Cuales son los sintomas que presenta el cancer de pancreas
 chunks = ["sintoma", "presentar", "cancer", "pancreas"]
 # chunks = ["sintomas", "cancer"]
+# chunks = ["tumor", "pancreas"]
 
 # Para los casos de palabras compuestas, tendremos que tomar el chunk como una, ej
 # Dolor de algo......Se hace necesario tomar un chunk como ambas palabras unidas
+# Dolor en algo
+# algo del
+# algo a
 # Annadir en archivo preprocess.py un metodo que filtre un chunk por reglas
 # @staticmethod
 # def filter_by_rules(tokens:list, rules:dict):

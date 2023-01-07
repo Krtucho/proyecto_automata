@@ -6,7 +6,7 @@ Instalar dependencias de python que se encuentran en el archivo requirements.txt
 
 Ejecutar el archivo main.py que se encuentre en system/pyke3-1.1.1/pyk3-1.1.1
 
->cd system/pyke3-1.1.1/pyk3-1.1.1
+>cd system/pyke3-1.1.1/pyke-1.1.1
 
 >python main.py
 

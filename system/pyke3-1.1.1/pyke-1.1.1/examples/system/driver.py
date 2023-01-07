@@ -88,8 +88,8 @@ def is_category(category):
         as gen:
             if gen:
                 for vars, plan in gen:
-                    print("%s, %s are %s" % \
-                        (category, vars['alias'], vars['relationship']))
+                    # print("%s, %s are %s" % \
+                    #     (category, vars['alias'], vars['relationship']))
                     return True, vars["category"]
     return False, category
 
@@ -140,8 +140,8 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
             as gen:
                 if gen:
                     for vars, plan in gen:
-                        print("%s, %s are %s" % \
-                            (vars['category1'], vars['category2'], vars["relationship"]))
+                        # print("%s, %s are %s" % \
+                        #     (vars['category1'], vars['category2'], vars["relationship"]))
                         result.append((vars['category2'], vars["relationship"]))
 
             with engine.prove_goal(
@@ -150,8 +150,8 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
                 as gen:
                     if gen:
                         for vars, plan in gen:
-                            print("%s, %s are %s" % \
-                                (vars['category1'], vars['category2'], vars["relationship"]))
+                            # print("%s, %s are %s" % \
+                            #     (vars['category1'], vars['category2'], vars["relationship"]))
                             result.append((vars['category1'], vars["relationship"]))
         else:
             with engine.prove_goal(
@@ -160,8 +160,8 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
                 as gen:
                     if gen:
                         for vars, plan in gen:
-                            print("%s, %s are %s" % \
-                                (vars['category1'], vars['category2'], vars["relationship"]))
+                            # print("%s, %s are %s" % \
+                            #     (vars['category1'], vars['category2'], vars["relationship"]))
                             result.append((vars['category2'], vars["relationship"]))
 
             with engine.prove_goal(
@@ -170,8 +170,8 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
                 as gen:
                     if gen:
                         for vars, plan in gen:
-                            print("%s, %s are %s" % \
-                                (vars['category1'], vars['category2'], vars["relationship"]))
+                            # print("%s, %s are %s" % \
+                            #     (vars['category1'], vars['category2'], vars["relationship"]))
                             result.append((vars['category1'], vars["relationship"]))
     if relationship:
         with engine.prove_goal(
@@ -180,8 +180,8 @@ def search_for_cat_cat_rel(category1=None, category2=None, relationship=None): #
             as gen:
                 if gen:
                     for vars, plan in gen:
-                        print("%s, %s are %s" % \
-                            (vars['category1'], vars['category2'], vars["relationship"]))
+                        # print("%s, %s are %s" % \
+                        #     (vars['category1'], vars['category2'], vars["relationship"]))
                         # result.append((vars['category2'], vars["relationship"]))
                         result.append(vars)
 
@@ -205,8 +205,8 @@ def belongs_to_category(chunk):
         as gen:
             if gen:
                 for vars, plan in gen:
-                    print("%s, %s are %s" % \
-                        (vars['name'], vars['category'], vars["relationship"]))
+                    # print("%s, %s are %s" % \
+                    #     (vars['name'], vars['category'], vars["relationship"]))
                     # result.append((vars['category'], vars["relationship"]))
                     result.append(vars)
                     belongs = vars['category']
@@ -219,21 +219,21 @@ def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None,
             if left_chunk_type == "cat":
 
                 relationships = search_for_cat_cat_rel(category1=chunk, category2=left_chunk)
-                print(relationships)
+                # print(relationships)
             # elif left_chunk_type == ""
         elif chunk_type == "rel":
             relationships = search_for_cat_cat_rel(relationship=chunk)
-            print(relationships)
+            # print(relationships)
         else:
             # Look if this chunk belogs to any category
             relationships = belongs_to_category(chunk)[0]
     else:
         if chunk_type == "cat":
             relationships = search_for_cat_cat_rel(category1=chunk)
-            print(relationships)
+            # print(relationships)
         elif chunk_type == "rel":
             relationships = search_for_cat_cat_rel(relationship=chunk)
-            print(relationships)
+            # print(relationships)
         else:
             # Look if this chunk belogs to any category
             relationships = belongs_to_category(chunk)[0]
@@ -249,8 +249,8 @@ def search_instance_category(chunk):
         as gen:
             if gen:
                 for vars, plan in gen:
-                    print("%s, %s are %s" % \
-                        (vars['name'], vars['category'], vars["relationship"]))
+                    # print("%s, %s are %s" % \
+                    #     (vars['name'], vars['category'], vars["relationship"]))
                     # result.append((vars['category'], vars["relationship"]))
                     result.append(vars)
     return result
@@ -295,7 +295,8 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                                     # print("%s, %s are %s" % \
                                     #     (vars['name'], vars['category'], vars["relationship"]))
                                     # result.append((vars['category'], vars["relationship"]))
-                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
+                                    tags = (right_chunk.terms_cat, left_chunk.chunk, right_chunk.term, "$instance2", rel_chunk.chunk)
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
                 elif right_chunk.chunk_type == "cat":
                     with engine.prove_goal(
                         'bc_system.has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)', # 'bc_system.has_cat_term_rel($cat_term, $cat, $symptom, $tumor, $relationship)', # cat_term=right_chunk.terms_cat, cat=left_chunk.chunk, tumor=right_chunk.term) \ Esta que esta comentada funciono!!!
@@ -306,7 +307,8 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                                     # print("%s, %s are %s" % \
                                     #     (vars['name'], vars['category'], vars["relationship"]))
                                     # result.append((vars['category'], vars["relationship"]))
-                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
+                                    tags = (right_chunk.chunk, left_chunk.chunk, "$instance1" "$instance2", "$relationship")
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
             elif left_chunk.chunk_type == "cat_term":
                 if right_chunk.chunk_type == "cat":
                     with engine.prove_goal(
@@ -318,7 +320,8 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                                     # print("%s, %s are %s" % \
                                     #     (vars['name'], vars['category'], vars["relationship"]))
                                     # result.append((vars['category'], vars["relationship"]))
-                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
+                                    tags = (left_chunk.terms_cat, right_chunk.chunk, left_chunk.term, "$instance2", "$relationship")
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
                 elif right_chunk.chunk_type == "cat_term":
                     with engine.prove_goal(
                         'bc_system.has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)', # 'bc_system.has_cat_term_rel($cat_term, $cat, $symptom, $tumor, $relationship)', # cat_term=right_chunk.terms_cat, cat=left_chunk.chunk, tumor=right_chunk.term) \ Esta que esta comentada funciono!!!
@@ -329,7 +332,8 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                                     # print("%s, %s are %s" % \
                                     #     (vars['name'], vars['category'], vars["relationship"]))
                                     # result.append((vars['category'], vars["relationship"]))
-                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
+                                    tags = (left_chunk.terms_cat, right_chunk.terms_cat, left_chunk.term, right_chunk.term, "$relationship")
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
         else:
             if left_chunk.chunk_type == "cat_term":
                 with engine.prove_goal(
@@ -341,7 +345,8 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                                     # print("%s, %s are %s" % \
                                     #     (vars['name'], vars['category'], vars["relationship"]))
                                     # result.append((vars['category'], vars["relationship"]))
-                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
+                                    tags = (left_chunk.terms_cat, left_chunk.chunk, left_chunk.term, "$instance2", rel_chunk.chunk)
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
             else:
                 result = left_chunk.relationships
         return RelCatTermChunk(relationships=result)
@@ -358,7 +363,8 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                                     # print("%s, %s are %s" % \
                                     #     (vars['name'], vars['category'], vars["relationship"]))
                                     # result.append((vars['category'], vars["relationship"]))
-                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
+                                    tags = (right_chunk.terms_cat, right_chunk.chunk, right_chunk.term, "$instance2", right_chunk.chunk)
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
         else:
             result = left_chunk.relationships
     return RelCatTermChunk(relationships=result)
@@ -376,9 +382,54 @@ def make_cat_relationship(chunk: CatChunk, right_chunk: CatChunk):
                 # print("%s, %s are %s" % \
                 #     (vars['name'], vars['category'], vars["relationship"]))
                 # result.append((vars['category'], vars["relationship"]))
-                result.append((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]))
+                result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
     
     return CatCatChunk(chunk, right_chunk, result if related else chunk.relationships + right_chunk.relationships)
+
+def find_chunk_types(chunks):
+    """Busco si cada chunk de mi oracion es una Categoria, Relacion o Termino"""
+    chunk_types = [search_type(chunk) for chunk in chunks] 
+    chunks = [chunk for (chunk_type,chunk) in chunk_types]
+    chunk_types = [chunk_type for (chunk_type,chunk) in chunk_types]
+
+    return chunk_types, chunks
+
+def create_chunks(chunk_types, chunks):
+    """Creo las instancias de tipo Cat-Term, Cat, Term y Rel"""
+    relationships = [] # Se ubicaran todos los chunks transformados a instancias de tipo Chunk
+    index = 0
+    while index < len(chunks):
+        if index < len(chunks) - 1:
+            left_chunk = chunks[index]
+            left_chunk_type = chunk_types[index]
+
+            right_chunk = chunks[index+1]
+            right_chunk_type = chunk_types[index+1]
+
+            cat_chunk = left_chunk if left_chunk_type == "cat" else right_chunk
+            term_chunk = left_chunk if left_chunk_type == "term" else right_chunk
+
+            if ( left_chunk_type == "cat" and right_chunk_type == "term") or (left_chunk_type == "term" and right_chunk_type == "cat"): # Si tengo la combinacion Cat-Term o Term-Cat:
+                
+                term_instances, terms_cat = belongs_to_category(term_chunk)
+                
+                relationships.append(CatTermChunk(left_chunk, right_chunk,  left_chunk_type, right_chunk_type,
+                cat_chunk,
+                term_chunk,
+                search_instance_category(cat_chunk), # Hechos de la categoria
+                None,
+                term_instances,    # Hechos del termino
+                terms_cat
+                ))
+                index += 2
+            else:
+                relationships.append(create_basic_chunk_type(chunks[index], chunk_types[index]))
+                index += 1
+        elif index == len(chunks) - 1:
+            relationships.append(create_basic_chunk_type(chunks[index], chunk_types[index]))
+            index += 1
+
+    return relationships
 
 def bc_test(person1 = 'bruce', chunks=[]):
     engine.reset()      # Allows us to run tests multiple times.
@@ -391,48 +442,15 @@ def bc_test(person1 = 'bruce', chunks=[]):
     print("doing proof")
     try:
         # For a traves de todos los chunks buscando su tipo: Los tipos son Categoria, Relacion, Termino
-        chunk_types = [search_type(chunk) for chunk in chunks] 
-        chunks = [chunk for (chunk_type,chunk) in chunk_types]
-        chunk_types = [chunk_type for (chunk_type,chunk) in chunk_types]
-        #Luego de hallar los tipos itero por cada uno y creo las instancias de tipo Cat-Item, uniendo estos para luego pasar a analizar los de tipo relations
-        relationships = []
-        index = 0
-        while index < len(chunks):
-            if index < len(chunks) - 1:
-                left_chunk = chunks[index]
-                left_chunk_type = chunk_types[index]
+        chunk_types, chunks = find_chunk_types(chunks)
 
-                right_chunk = chunks[index+1]
-                right_chunk_type = chunk_types[index+1]
-
-                cat_chunk = left_chunk if left_chunk_type == "cat" else right_chunk
-                term_chunk = left_chunk if left_chunk_type == "term" else right_chunk
-
-                if ( left_chunk_type == "cat" and right_chunk_type == "term") or (left_chunk_type == "term" and right_chunk_type == "cat"): # Si tengo la combinacion Cat-Term o Term-Cat:
-                    
-                    term_instances, terms_cat = belongs_to_category(term_chunk)
-                    
-                    relationships.append(CatTermChunk(left_chunk, right_chunk,  left_chunk_type, right_chunk_type,
-                    cat_chunk,
-                    term_chunk,
-                    search_instance_category(cat_chunk), # Hechos de la categoria
-                    None,
-                    term_instances,    # Hechos del termino
-                    terms_cat
-                    ))
-                    index += 2
-                else:
-                    relationships.append(create_basic_chunk_type(chunks[index], chunk_types[index]))
-                    index += 1
-            elif index == len(chunks) - 1:
-                relationships.append(create_basic_chunk_type(chunks[index], chunk_types[index]))
-                index += 1
+        #Luego de hallar los tipos itero por cada uno y creo las instancias de tipo Cat-Term, Cat, Term y Rel, uniendo estos(Cat-Term) para luego pasar a analizar los de tipo relations
+        relationships = create_chunks(chunk_types, chunks)
 
         # Luego de tener todos en una lista de las formas Cat, Cat-Term, Rel, pasamos a buscar las relaciones que se puedan crear con Cat-Term Rel Cat-Term o Cat Rel Cat y luego con Cat-Cat. 
         # En caso de quedar Term solos, se veran en codigo estos casos en otro momento
         # TODO: Analizar casos en los que queden Term
 
-        
         result = [] # Creo una nueva lista para ir agregando los resultados que saldran de relacionar loas Cat-Term que esten a la izquierda del Rel con los Cat-Term que esten a su derecha
 
         index =  0
@@ -472,56 +490,23 @@ def bc_test(person1 = 'bruce', chunks=[]):
         while index < len(relationships):
             if relationships[index].chunk_type == "cat":
                 if index < len(relationships)-1 and relationships[index+1].chunk_type=="cat":
-                    # if relationships[index+1].chunk_type in types: # index+1 < len(relationships)
                     relationship = make_cat_relationship(relationships[index], right_chunk=relationships[index+1])
                     result.append(relationship)
                     index += 2
-                    # index += 1
-                # elif index == len(relationships) -1:
-                #     relationship = make_relationships(relationships[index])
                 else:
                     result.append(relationships[index])
                     index += 1
-                    # left_chunk = relationships[index-1]
-                    # right_chunk = relationships[index+1]
-
-                    
-                    # if not left_chunk.chunk_type in types:
-                    #     left_chunk = None
-                    # if not right_chunk.chunk_type in types:
-                    #     right_chunk = None
-                    # relationship = make_relationships(relationships[index], left_chunk, right_chunk)
-                    # result.append(relationship)
-                    # index += 2
             else:
-                # if index > 0 and relationships[index-1].chunk_type !=  "rel":
                 result.append(relationships[index])
                 index += 1
 
-
-        # for index, chunk in enumerate(chunks):
-        #     if index == 0:
-        #         relationships[index] = check_relationship(chunk, chunk_types[index])
-        #     else:
-        #         relationships[index] = check_relationship(chunk, chunk_types[index], chunks[index-1], chunk_types[index-1], relationships[index-1])
-
         # Luego de hallar las relaciones existentes entre cada chunk y su anterior, se supone que obtengamos las relaciones que existen entre todos los chunks en general 
         for chunk in result:
-            # if chunk.relationships:
-            #     print(chunk.relationships)
-            for relationship in chunk.relationships:
-                if relationship:
-                    print(relationship) # Aqui se supone que haya que printear cosas diferentes en dependencia del tipo de Chunk que sea
-
-
-        # actual = chunks[2]
-        # with engine.prove_goal(
-        #        'bc_system.has_related($name, $alias, $relationship)',
-        #        name=actual) \
-        #   as gen:
-        #     for vars, plan in gen:
-        #         print("%s, %s are %s" % \
-        #                 (actual, vars['alias'], vars['relationship']))
+            if chunk.relationships:
+                print(chunk)
+            # for relationship in chunk.relationships:
+            #     if relationship:
+            #         print(relationship) # Aqui se supone que haya que printear cosas diferentes en dependencia del tipo de Chunk que sea
     except Exception as e:
         print(e)
         # This converts stack frames of generated python functions back to the
