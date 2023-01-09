@@ -112,8 +112,8 @@ def is_term(name):
         as gen:
             if gen:
                 for vars, plan in gen:
-                    print("%s, %s are %s" % \
-                        (vars['name'], vars['term']))
+                    # print("%s, %s are %s" % \
+                    #     (vars['name'], vars['term']))
                     return True, vars["term"]
     return True, name
 
@@ -212,6 +212,48 @@ def belongs_to_category(chunk):
                     belongs = vars['category']
     return result, belongs
 
+def tumor_has_symptom(symptom:str)->list:
+    """Dado un sintoma, deuelve el tumor(organo) al cual pertenece\nsymptom:str->nombre del sintoma cambiando espacios por _. Devuelve una lista con los tumores(lista de strings)."""
+    tumors = []
+    
+
+    _, symptom = search_type(symptom)
+
+    # belongs = None
+    with engine.prove_goal(
+            'bc_system.has_symptom($tumor, $symptom, $relationship)',
+            symptom=symptom) \
+        as gen:
+            if gen:
+                for vars, plan in gen:
+                    # print("%s, %s are %s" % \
+                    #     (vars['name'], vars['category'], vars["relationship"]))
+                    # result.append((vars['category'], vars["relationship"]))
+                    tumors.append(vars["tumor"])
+                    # belongs = vars['category']
+    return tumors
+
+def tumors_has_many_symptoms(symptoms:list)-> dict:
+    """Dada una lista de sintomas devuelve un diccionario con llaves=tumor, valor=sintomas(lista de strings)"""
+    engine.reset()      # Allows us to run tests multiple times.
+
+    start_time = time.time()
+    engine.activate('bc_system')
+    fc_end_time = time.time()
+    fc_time = fc_end_time - start_time
+    
+    tumors_dict = {}
+    
+    for symptom in symptoms:
+        for tumor in tumor_has_symptom(symptom):
+            if tumors_dict.__contains__(tumor):
+                tumors_dict[tumor].append(symptom)
+            else:
+                tumors_dict[tumor] = [symptom]
+
+    return tumors_dict
+    
+
 def check_relationship(chunk, chunk_type, left_chunk=None, left_chunk_type=None, left_chunk_rel=None): # La idea en este punto es buscar como se relaciona el chunk actual con el anterior, si es el 1er chunk entonces solamente habra que buscar en donde aparece relacionado con alguien
     relationships = []
     if left_chunk:
@@ -267,7 +309,8 @@ def create_basic_chunk_type(chunk, chunk_type)-> Chunk:
     elif chunk_type == "term":
         # Look if this chunk belogs to any category
         relationships = belongs_to_category(chunk)[0]
-        return TermChunk(chunk,term_instances=relationships)
+        found:bool = relationships == None
+        return TermChunk(chunk,term_instances=relationships, found=found)
     elif chunk_type == "rel":
         relationships = search_for_cat_cat_rel(relationship=chunk)
         return RelChunk(chunk, rel_instances=relationships)
@@ -389,8 +432,8 @@ def make_cat_relationship(chunk: CatChunk, right_chunk: CatChunk):
 def find_chunk_types(chunks):
     """Busco si cada chunk de mi oracion es una Categoria, Relacion o Termino"""
     chunk_types = [search_type(chunk) for chunk in chunks] 
-    chunks = [chunk for (chunk_type,chunk) in chunk_types]
-    chunk_types = [chunk_type for (chunk_type,chunk) in chunk_types]
+    chunks = [chunk for (_,chunk) in chunk_types]
+    chunk_types = [chunk_type for (chunk_type,_) in chunk_types]
 
     return chunk_types, chunks
 
@@ -502,6 +545,10 @@ def bc_test(person1 = 'bruce', chunks=[]):
 
         # Luego de hallar las relaciones existentes entre cada chunk y su anterior, se supone que obtengamos las relaciones que existen entre todos los chunks en general 
         for chunk in result:
+            if chunk.chunk_type == "term":
+                if not chunk.found:
+                    # Buscar definicion en wikipedia
+                    continue
             if chunk.relationships:
                 print(chunk)
             # for relationship in chunk.relationships:

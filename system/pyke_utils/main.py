@@ -1,5 +1,8 @@
 import sys
-sys.path.append('/home/krtucho/School/IA+Sim/github/proyecto_automata/pyke3-1.1.1/pyke-1.1.1')
+# Descomentar la siguiente linea
+# sys.path.append('your_path') # Ex: 'system/pyke_utils'
+
+# sys.path.append('/home/krtucho/School/IA_Sim/github/proyecto_automata/system/pyke_utils')
 
 import examples.system.driver as driver
 
@@ -30,4 +33,7 @@ chunks = ["sintoma", "presentar", "cancer", "pancreas"]
 
 # for chunks in chunks_list:
 #     words = [l for (w,l,p) in chunks]    
-driver.bc_test('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 
+tumors_dict = driver.tumors_has_many_symptoms(['dolores_de_cabeza', 'dificultad_para_tomar_decisiones', 'ictericia']) # Metodo para obtener tumores de sintomas
+
+# Para probar como se comporta el sistema experto con la consulta que se encuentra en la variable chunks(procesada por nlp) descomente la siguiente linea
+# driver.bc_test('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 

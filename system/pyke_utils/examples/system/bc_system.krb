@@ -125,5 +125,9 @@ has_recurrent_rel_no
 has_recurrent_term_no
     use has_recurrent_term($name, $term)
     when
-        system.type_term($name, $term)
+        system.type_terms($name, $term)
 
+#has_recurrent_term_no_vic
+#    use has_recurrent_term($name, $term)
+#    when
+#        system.type_terms($term, $name)

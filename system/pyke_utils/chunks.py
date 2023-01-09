@@ -34,11 +34,12 @@ class CatCatChunk(Chunk):
         return super().__str__()
 
 class TermChunk(Chunk):
-    def __init__(self, chunk, term_instances=None, cat=None) -> None:
+    def __init__(self, chunk, term_instances=None, cat=None, found=None) -> None:
         self.chunk = chunk
         self.chunk_type = "term"
         self.term_instances = term_instances
         self.cat = cat
+        self.found=found
         self.relationships = self.instances
         self.text_chunk = self.chunk
 
