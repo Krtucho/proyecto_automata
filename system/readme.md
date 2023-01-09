@@ -1,3 +1,10 @@
->cd pyke3-1.1.1
->cd pyke-1.1.1
+# Para pruebas comunes
+Ejecutar el archivo main.py que se encuentre en system/pyke_utils
+
+```
+>cd system/pye_utils
+```
+
+```
 >python main.py
+```
