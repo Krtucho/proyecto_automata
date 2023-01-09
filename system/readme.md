@@ -2,7 +2,7 @@
 Ejecutar el archivo main.py que se encuentre en system/pyke_utils
 
 ```
->cd system/pye_utils
+>cd system/pyke_utils
 ```
 
 ```
