@@ -1,6 +1,7 @@
 import wikipedia
 
 class Wiki:
+    @staticmethod
     def search_on_wiki(query:str)->str:
         # importing the module
  

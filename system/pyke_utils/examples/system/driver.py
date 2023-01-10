@@ -49,7 +49,8 @@ from pyke import knowledge_engine, krb_traceback, goal
 
 # Chunks and Relationships
 from chunks import *
-from system.pyke_utils.web import Wiki
+
+from web import Wiki
 
 # Compile and load .krb files in same directory that I'm in (recursively).
 engine = knowledge_engine.engine(__file__)
@@ -556,13 +557,15 @@ def get_answer(query, chunks=[]):
                     # Buscar definicion en wikipedia
                     continue
             if chunk.relationships:
-                print(chunk)
+                output += str(chunk)
 
         if len(unknown_terms) > max_unknown_terms:
             return Wiki.search_on_wiki(query)
             # for relationship in chunk.relationships:
             #     if relationship:
             #         print(relationship) # Aqui se supone que haya que printear cosas diferentes en dependencia del tipo de Chunk que sea
+
+        return output
     except Exception as e:
         print(e)
         # This converts stack frames of generated python functions back to the
