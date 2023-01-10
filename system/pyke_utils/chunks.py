@@ -29,6 +29,7 @@ class CatCatChunk(Chunk):
         self.chunk = f"{left_cat.chunk} {right_cat.chunk}"
         self.relationships = cat_relationships
         self.text_chunk = self.chunk
+        self.chunk_type = "cat_cat"
 
     def __str__(self) -> str:
         return super().__str__()
@@ -40,7 +41,7 @@ class TermChunk(Chunk):
         self.term_instances = term_instances
         self.cat = cat
         self.found=found
-        self.relationships = self.instances
+        self.relationships = term_instances
         self.text_chunk = self.chunk
 
     def __str__(self) -> str:
@@ -80,7 +81,7 @@ class CatTermChunk(Chunk):
     def __str__(self) -> str:
         return super().__str__()
 
-class RelCatTermChunk(Chunk, ):
+class RelCatTermChunk(Chunk):
     def __init__(self, relationships) -> None:
         self.relationships = relationships
         self.chunk_type = "rel_cat_term"

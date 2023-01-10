@@ -1,5 +1,6 @@
-from abc import abstractmethod
 import nltk, spacy
+
+import examples.system.driver as driver
 nlp = spacy.load('es_core_news_md')
 
 
@@ -26,6 +27,41 @@ class PreprocessText():
         targets = ["NOUN", "VERB"]
         return [(t,l,p) for (t,l,p) in PreprocessText.tokenize_and_tag_sent(sent) if p in targets]
     
+    # Filtrando luego de obtener los tokens
+    @staticmethod
+    def filter_by_rules(sent:str, rules:dict, tokens:list=None):
+        """Metodo para aplicar ciertas reglas al manejo de una consulta. Si se pasa lista de tokens se asume que estos ya vienen procesados en el formate que se utiliza en este codigo(Cada elemento es una tupla con (palabra, lemma, pos) )"""
+        # Se espera que list sean un 2-grama o 3-grama, o n-grama
+        n_grams = rules["n_grams"]
+        targets = rules["types"]
+        
+        if not tokens:
+            tokens = PreprocessText.tokenize_and_tag_sent(sent)
+
+        result = []
+        mask = [False]*len(tokens)
+        # Taking n-grams and searching if they are terms
+        for index, (t,l,p) in enumerate(tokens):
+            actual_target = []
+            if not mask[index]:
+                for i in range(index, index+n_grams):
+                    actual_target = [l for (t,l,p) in tokens[index:i+1]]
+                    actual_target_str = '_'.join(actual_target)
+                    if driver.is_term(actual_target_str)[0]:
+                        result.append(actual_target_str)
+                        for j in range(index, i+1):
+                            mask[j] = True
+                        break
+            # else:
+                if not mask[index]:
+                    if p in targets:
+                        result.append(tokens[index][1])
+
+
+
+        # target = "".join('_',tokens)
+        return result
+
     @staticmethod
     def normalize(lista_palabras):
         """Dada una lista de palabras (lista de strings, intercambia las letras que tengan tildes por sus omologas sin tilde y las ñ por nn"""

@@ -1,4 +1,3 @@
-from shutil import ExecError
 import sys
 # Descomentar la siguiente linea
 # sys.path.append('your_path') # Ex: 'system/pyke_utils'
@@ -7,28 +6,36 @@ import sys
 
 import examples.system.driver as driver
 
-# from preprocess import PreprocessText
+from preprocess import PreprocessText
 
+rules = {"n_grams":3, "types":["VERB", "NOUN", "PROPN"]} # Default Rules
+# temp = PreprocessText.filter_by_rules("dolores y dolor en abdomen muy malos", rules=rules)
+# print(temp)
 # Metodo principal de este archivo Descomentar las siguientes lineas para hacer uso de el desde otro archivo
-# def ask(query:str) -> str:
-#     """Dada una pregunta se devuelve la respuesta a la misma luego de ser procesada por el sistema experto"""
-#     try:
-#         sentences = PreprocessText.sentence_segmentation(query)
+def ask(query:str, rules:dict=rules) -> str:
+    """Dada una pregunta se devuelve la respuesta a la misma luego de ser procesada por el sistema experto"""
+    try:
+        sentences = PreprocessText.sentence_segmentation(query)
 
-#         chunks_list = []
-#         for sentence in sentences:
-#             chunks_list.append(PreprocessText.get_verbs_and_nouns(sentence))
+        chunks_list = []
+        for sentence in sentences:
+            chunks_list.append(PreprocessText.filter_by_rules(sentence, rules=rules))
 
-#         for chunks in chunks_list:
-#             words = [l for (w,l,p) in chunks]  
+        # for chunks in chunks_list:
+        #     words = [l for (w,l,p) in chunks]  
+        output = ""
 
-#         return driver.get_answer(query, chunks)
-#     except Exception as e:
-#         print(e)
-#         return "Error! :("
+        for index, chunks in enumerate(chunks_list):
+            output += driver.get_answer(sentences[index], PreprocessText.normalize(chunks))
+
+        return output#driver.get_answer(query, chunks)
+    except Exception as e:
+        print(e)
+        return "Error! :("
 
 
 # sentences = PreprocessText.sentence_segmentation("¿Cuáles son los síntomas que presenta el cáncer de páncreas?")
+
 
 # chunks_list = []
 # for sentence in sentences:
@@ -57,4 +64,5 @@ chunks = ["sintoma", "presentar", "cancer", "pancreas"]
 tumors_dict = driver.tumors_has_many_symptoms(['dolores_de_cabeza', 'dificultad_para_tomar_decisiones', 'ictericia']) # Metodo para obtener tumores de sintomas
 
 # Para probar como se comporta el sistema experto con la consulta que se encuentra en la variable chunks(procesada por nlp) descomente la siguiente linea
-# driver.get_answer('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 
+# resp = driver.get_answer('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 
+# print(ask("sintomas de cancer de pancreas"))

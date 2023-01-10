@@ -103,7 +103,7 @@ def process_query(query:str):
         st.session_state.question_number = 0
         set_choices_and_answers(command=query) # Para este caso query sera nuestro comando. Tenerlo en cuenta.
     else:
-        return "We are working on it"
+        return ask(query)
     return ""
     
 def exit_quiz():

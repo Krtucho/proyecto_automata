@@ -106,6 +106,13 @@ def is_relationship(relationship):
     return False, relationship
 
 def is_term(name):
+    engine.reset()      # Allows us to run tests multiple times.
+
+    start_time = time.time()
+    engine.activate('bc_system')
+    fc_end_time = time.time()
+    fc_time = fc_end_time - start_time
+
     with engine.prove_goal(
                'bc_system.has_recurrent_term($name, $term)',
                name=name) \
@@ -115,7 +122,7 @@ def is_term(name):
                     # print("%s, %s are %s" % \
                     #     (vars['name'], vars['term']))
                     return True, vars["term"]
-    return True, name
+    return False, name
 
 def search_type(chunk) -> str:
     is_cat, cat = is_category(chunk)
@@ -331,7 +338,7 @@ def make_relationships(rel_chunk:Chunk, left_chunk=None, right_chunk=None)-> Rel
                 if right_chunk.chunk_type == "cat_term":
                     with engine.prove_goal(
                         'bc_system.has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)', # 'bc_system.has_cat_term_rel($cat_term, $cat, $symptom, $tumor, $relationship)', # cat_term=right_chunk.terms_cat, cat=left_chunk.chunk, tumor=right_chunk.term) \ Esta que esta comentada funciono!!!
-                            category1=right_chunk.terms_cat, category2=left_chunk.chunk, instance1=right_chunk.term, relationship=rel_chunk.chunk) \
+                            category1=right_chunk.terms_cat, category2=left_chunk.chunk, instance1=right_chunk.term) \
                         as gen:
                             if gen:
                                 for vars, plan in gen:
@@ -428,6 +435,23 @@ def make_cat_relationship(chunk: CatChunk, right_chunk: CatChunk):
                 result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"])))
     
     return CatCatChunk(chunk, right_chunk, result if related else chunk.relationships + right_chunk.relationships)
+
+def make_cat_cat_term_relationship(cat_chunk: CatChunk, cat_term_chunk: CatTermChunk):
+    result = []
+    with engine.prove_goal(
+                        'bc_system.has_cat_cat_rel($category1, $category2, $instance1, $instance2, $relationship)', # 'bc_system.has_cat_term_rel($cat_term, $cat, $symptom, $tumor, $relationship)', # cat_term=right_chunk.terms_cat, cat=left_chunk.chunk, tumor=right_chunk.term) \ Esta que esta comentada funciono!!!
+                            category1=cat_term_chunk.terms_cat, category2=cat_chunk.chunk, instance1=cat_term_chunk.term) \
+                        as gen:
+                            if gen:
+                                for vars, plan in gen:
+                                    # print("%s, %s are %s" % \
+                                    #     (vars['name'], vars['category'], vars["relationship"]))
+                                    # result.append((vars['category'], vars["relationship"]))
+                                    tags = (cat_term_chunk.terms_cat, cat_chunk.chunk, cat_term_chunk.term, "$instance2", "$relationship")
+                                    result.append(Relationship((vars["category1"], vars["category2"], vars["instance1"], vars["instance2"], vars["relationship"]), tags=tags))
+
+    # result = left_chunk.relationships
+    return RelCatTermChunk(relationships=result)
 
 def find_chunk_types(chunks):
     """Busco si cada chunk de mi oracion es una Categoria, Relacion o Termino"""
@@ -534,8 +558,8 @@ def get_answer(query, chunks=[]):
         types = ["cat_term", "cat"]
         while index < len(relationships):
             if relationships[index].chunk_type == "cat":
-                if index < len(relationships)-1 and relationships[index+1].chunk_type=="cat":
-                    relationship = make_cat_relationship(relationships[index], right_chunk=relationships[index+1])
+                if index < len(relationships)-1 and relationships[index+1].chunk_type in types:
+                    relationship = make_cat_cat_term_relationship(relationships[index], relationships[index+1])
                     result.append(relationship)
                     index += 2
                 else:
@@ -548,6 +572,8 @@ def get_answer(query, chunks=[]):
         unknown_terms = []
 
         output = "" # Respuesta de la consulta hecha por el usuario
+
+        print(result)
 
         # Luego de hallar las relaciones existentes entre cada chunk y su anterior, se supone que obtengamos las relaciones que existen entre todos los chunks en general 
         for chunk in result:
@@ -564,7 +590,14 @@ def get_answer(query, chunks=[]):
             # for relationship in chunk.relationships:
             #     if relationship:
             #         print(relationship) # Aqui se supone que haya que printear cosas diferentes en dependencia del tipo de Chunk que sea
-
+        # print(output)
+        
+        # if output == "":
+            # try:
+            #     return Wiki.search_on_wiki(query)
+            # except Exception as e:
+            #     print(e)
+            #     return "We did not find anything. Sorry :("
         return output
     except Exception as e:
         print(e)
