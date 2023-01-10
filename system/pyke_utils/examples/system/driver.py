@@ -40,17 +40,16 @@
 
 
 import contextlib
-from nis import cat
 import sys
 import time
 from typing import Tuple
 from markupsafe import string
-from numpy import var
 
 from pyke import knowledge_engine, krb_traceback, goal
 
 # Chunks and Relationships
 from chunks import *
+from system.pyke_utils.web import Wiki
 
 # Compile and load .krb files in same directory that I'm in (recursively).
 engine = knowledge_engine.engine(__file__)
@@ -474,13 +473,15 @@ def create_chunks(chunk_types, chunks):
 
     return relationships
 
-def bc_test(person1 = 'bruce', chunks=[]):
+def get_answer(query, chunks=[]):
     engine.reset()      # Allows us to run tests multiple times.
 
     start_time = time.time()
     engine.activate('bc_system')
     fc_end_time = time.time()
     fc_time = fc_end_time - start_time
+
+    max_unknown_terms = 5
 
     print("doing proof")
     try:
@@ -543,14 +544,22 @@ def bc_test(person1 = 'bruce', chunks=[]):
                 result.append(relationships[index])
                 index += 1
 
+        unknown_terms = []
+
+        output = "" # Respuesta de la consulta hecha por el usuario
+
         # Luego de hallar las relaciones existentes entre cada chunk y su anterior, se supone que obtengamos las relaciones que existen entre todos los chunks en general 
         for chunk in result:
             if chunk.chunk_type == "term":
                 if not chunk.found:
+                    unknown_terms.append(chunk.chunk)
                     # Buscar definicion en wikipedia
                     continue
             if chunk.relationships:
                 print(chunk)
+
+        if len(unknown_terms) > max_unknown_terms:
+            return Wiki.search_on_wiki(query)
             # for relationship in chunk.relationships:
             #     if relationship:
             #         print(relationship) # Aqui se supone que haya que printear cosas diferentes en dependencia del tipo de Chunk que sea

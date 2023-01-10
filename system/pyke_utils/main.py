@@ -1,12 +1,32 @@
+from shutil import ExecError
 import sys
 # Descomentar la siguiente linea
 # sys.path.append('your_path') # Ex: 'system/pyke_utils'
 
-# sys.path.append('/home/krtucho/School/IA_Sim/github/proyecto_automata/system/pyke_utils')
+sys.path.append('/home/krtucho/School/IA_Sim/github/proyecto_automata/system/pyke_utils')
 
 import examples.system.driver as driver
 
-# from preprocess import PreprocessText
+from preprocess import PreprocessText
+
+def ask(query:str) -> str:
+    """Dada una pregunta se devuelve la respuesta a la misma luego de ser procesada por el sistema experto"""
+    try:
+        sentences = PreprocessText.sentence_segmentation(query)
+
+        chunks_list = []
+        for sentence in sentences:
+            chunks_list.append(PreprocessText.get_verbs_and_nouns(sentence))
+
+        for chunks in chunks_list:
+            words = [l for (w,l,p) in chunks]  
+
+        return driver.get_answer(query, chunks)
+    except Exception as e:
+        print(e)
+        return "Error! :("
+
+
 # sentences = PreprocessText.sentence_segmentation("¿Cuáles son los síntomas que presenta el cáncer de páncreas?")
 
 # chunks_list = []
@@ -36,4 +56,4 @@ chunks = ["sintoma", "presentar", "cancer", "pancreas"]
 tumors_dict = driver.tumors_has_many_symptoms(['dolores_de_cabeza', 'dificultad_para_tomar_decisiones', 'ictericia']) # Metodo para obtener tumores de sintomas
 
 # Para probar como se comporta el sistema experto con la consulta que se encuentra en la variable chunks(procesada por nlp) descomente la siguiente linea
-# driver.bc_test('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 
+# driver.get_answer('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 

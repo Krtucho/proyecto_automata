@@ -24,25 +24,40 @@ if 'process' not in st.session_state:
 if 'answer' not in st.session_state:
     st.session_state.answer = "" # Ultima respuesta que retorno el sistema experto
 
-# ************************ YOUR CODE HERE *************************** #
+if 'choices' not in st.session_state:
+    st.session_state.choices = []   # Opciones
+
+if 'questions' not in st.session_state:
+    st.session_state.questions = [] # Preguntas
+
+if 'indroductory_text' not in st.session_state:
+    st.session_state.introductory_text = "your_text" # Asignar a esta variable texto introductorio para  
+
+# ************************ YOUR CODE HERE ONLY FOR TEST PURPOSES*************************** #
 # Por el momento estas preguntas y respuestas solamente funcionan para el comando diagnostico 
 # Para otros comandos se debe de modificar la variable st.session_state.
-choices = [["1","2","3"], ["1","2"], ["1","2", "4"]] # Posibles opciones a seleccionar por el usuario en cada momento
-questions = ["Sintomas de la cabeza", "brazos", "piernas"] # Escribir Preguntas
+choices = st.session_state.choices # choices = [["1","2","3"], ["1","2"], ["1","2", "4"]] # Posibles opciones a seleccionar por el usuario en cada momento
+questions = st.session_state.questions # questions = ["Sintomas de la cabeza", "brazos", "piernas"] # Escribir Preguntas
 # ******************************************************************* #
 
 
 def set_choices_and_answers(command):
     """Se supone que en este metodo se cree la maquinaria para que dado un comando, se establescan las preguntas y posibles opciones a seleccionar por el usuario
     \nEx: Si el comando es /diagnostico:
-    \n>choices = metodo_que_devuelva_opciones(comando)
-    \n>questions = metodo_que_devuelva_preguntas(comando)"""
+    \n>choices.clear()
+    \n>choices.extend(metodo_que_devuelva_opciones(comando))
+    \n>questions.clear()
+    \n>questions.extend(metodo_que_devuelva_preguntas(comando))"""
     # ************************ YOUR CODE HERE *************************** #
-    #   choices = metodo_que_devuelva_opciones(comando)
-    #   questions = metodo_que_devuelva_preguntas(comando)
+    choices.clear()
+    choices.extend([["1","2","3"], ["1","2"], ["1","2", "4"]]) #   choices.extend(metodo_que_devuelva_opciones(comando))
+
+    questions.clear()
+    questions.extend(["Sintomas de la cabeza", "brazos", "piernas"]) # questions.extend(metodo_que_devuelva_preguntas(comando))
     # ******************************************************************* #
-    # Remove the next line
-    pass
+
+    # Asignar texto introductorio
+    st.session_state.introductory_text = "your_text" 
 
 def set_answer(answer:str):
     """Al entrar en esta parte del metodo se supone que se hayan terminado las preguntas y por tanto el usuario este esperando una respuesta luego de procesar su cuestionario
@@ -57,6 +72,7 @@ def get_question(question_number):
     if not st.session_state.finished:
         # print(question_number)
         # print(st.session_state.selected)
+        introductory_text = "your_text" # Asignar a esta variable texto introductorio para 
         if question_number < len(questions):
             q = questions[question_number]
             q_choices = choices[question_number]
@@ -128,7 +144,7 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
             st.session_state.finished = True
             # **************** YOUR CODE HERE ********************** # Primero procesar el contenido de la variables st.session_state.selected(lista con todas las respuestas seleccionadas por el usuario) y luego llamar al metodo set_answer
             set_answer("The End!") # Al entrar en esta parte del metodo se supone que se hayan terminado las preguntas y por tanto el usuario este esperando una respuesta luego de procesar su cuestionario
-                                   # El metodo set_answer es para devolver asignar dicha respuesta
+                                   # El metodo set_answer es para asignar dicha respuesta a las variables o codigos que renderizaran este texto
             # ****************************************************** #
         st.experimental_rerun()
 elif write_btn:
