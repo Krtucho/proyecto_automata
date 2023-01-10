@@ -9,6 +9,12 @@ from pyke_utils.main import *
 # El comando clave para acceder al apartado del cuestionario sera: /diagnostico
 # Se tendra que escribir en el input que sale en la pagina web y dar click en submit
 
+# Side Bar
+st.sidebar.text("Comandos")#add_rows(["Commands:", "/diagnostico"])
+st.sidebar.text("/diagnostico")
+st.sidebar.text("/diagnostico")
+
+# static variables
 if 'question_number' not in st.session_state:
     st.session_state.question_number=0 # Aqui se le asigna el indice actual de la pregunta en el cuestionario
 
@@ -30,10 +36,13 @@ if 'choices' not in st.session_state:
 if 'questions' not in st.session_state:
     st.session_state.questions = [] # Preguntas
 
+# ************************ YOUR CODE HERE *************************** #
 if 'indroductory_text' not in st.session_state:
-    st.session_state.introductory_text = "your_text" # Asignar a esta variable texto introductorio para  
+    st.session_state.introductory_text = "your_text" # Asignar a esta variable texto introductorio para mostrar en la 1ra pregunta del cuestionario
+# ******************************************************************* #
 
-# ************************ YOUR CODE HERE ONLY FOR TEST PURPOSES*************************** #
+
+# ************************ YOUR CODE HERE ONLY FOR TEST PURPOSES, SO...DO NOT TOUCH IT NOW *************************** #
 # Por el momento estas preguntas y respuestas solamente funcionan para el comando diagnostico 
 # Para otros comandos se debe de modificar la variable st.session_state.
 choices = st.session_state.choices # choices = [["1","2","3"], ["1","2"], ["1","2", "4"]] # Posibles opciones a seleccionar por el usuario en cada momento
@@ -72,7 +81,7 @@ def get_question(question_number):
     if not st.session_state.finished:
         # print(question_number)
         # print(st.session_state.selected)
-        introductory_text = "your_text" # Asignar a esta variable texto introductorio para 
+
         if question_number < len(questions):
             q = questions[question_number]
             q_choices = choices[question_number]
@@ -114,8 +123,11 @@ write_btn = None
 if st.session_state.process == "quiz": # Si se encuentra realizando el quiz se les dara valores a las variables necesarias, sino, todas se van con None
     q, q_choices = get_question(st.session_state.question_number)
 
+    if st.session_state.question_number == 0:
+        st.text(f"{st.session_state.introductory_text}")
+
     if not st.session_state.finished:
-        st.text(f"Please select some answers answer:\n {q}")
+        st.text(f"Please select some answers:\n {q}")
 
     if st.session_state.finished:
         st.text(f"You have finished the quiz:\n Answer:\n{st.session_state.answer}")
