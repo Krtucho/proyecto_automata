@@ -586,7 +586,8 @@ def get_answer(query, chunks=[]):
                 output += str(chunk)
 
         if len(unknown_terms) > max_unknown_terms:
-            return Wiki.search_on_wiki(query)
+            #return Wiki.search_on_wiki(query) # Si la cantidad de terminos que se desconocen es mayor que la cant de terminos aceptados, pues se busca en wikipedia
+            pass
             # for relationship in chunk.relationships:
             #     if relationship:
             #         print(relationship) # Aqui se supone que haya que printear cosas diferentes en dependencia del tipo de Chunk que sea

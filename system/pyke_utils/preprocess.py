@@ -35,6 +35,8 @@ class PreprocessText():
         n_grams = rules["n_grams"]
         targets = rules["types"]
         
+        # Palabras que las toma como adjetivos: tejido
+
         if not tokens:
             tokens = PreprocessText.tokenize_and_tag_sent(sent)
 

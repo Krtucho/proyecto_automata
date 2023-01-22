@@ -46,6 +46,20 @@ type_alias(tumor, cancer)
 type_alias(tumores, cancer)
 type_alias(tumoral, cancer)
 
+# sinonimos de recomendacion
+type_alias(recomiendan, recomendacion)
+type_alias(recomendar, recomendacion)
+type_alias(consejo, recomendacion)
+type_alias(aconsejan, recomendacion)
+type_alias(aconsejar, recomendacion)
+
+# sinonimos de tratamiento
+type_alias(tratar, tratamiento)
+type_alias(terapia, tratamiento)
+type_alias(procedimiento, tratamiento)
+type_alias(cura, tratamiento)
+type_alias(combatir, tratamiento)
+type_alias(medicacion, tratamiento)
 
 
 # TODO: Crear nombres semejantes a los nombres en singular, por ejemplo crear sintomas para referirse a sintoma
@@ -84,26 +98,109 @@ relation_cat_cat(cancer, organo, de)
 #cancer_sintoma("Cambios en los senos", tumor)
 
 # Instancias de categorias
-category(cerebro, organ)
-category(higado, organ)
-category(pancreas, organ)
-category(mama, organ)
-category(ovarios, organ)
-category(rinnones, organ)
-category(testiculos, organ)
-category(piel, organ)
-category(traquea, organ)
-category(nariz, organ)
-category(esofago, organ)
-category(laringe, organ)
-category(tiroides, organ)
+category(cerebro, organo)
+category(higado, organo)
+category(pancreas, organo)
+category(mama, organo)
+category(ovarios, organo)
+category(rinnones, organo)
+category(testiculos, organo)
+category(piel, organo)
+category(traquea, organo)
+category(nariz, organo)
+category(esofago, organo)
+category(laringe, organo)
+category(tiroides, organo)
 
 category(epitelio, tejido)
 category(conectivo, tejido)
 category(muscular, tejido)
 category(nervioso, tejido)
 
+# Todos los sintomas que presentan todos los tumores
 category(dolor, sintoma)
+
+# Pancreas
+category(ictericia, sintoma)
+category(perdida_de_peso, sintoma)
+category(dolor_en_abdomen, sintoma)
+category(dolor_en_espalda, sintoma)
+category(esteatorrea, sintoma)
+category(intolerancia_a_la_glucosa, sintoma)
+
+# Ovarios
+category(dolor_o_hinchazon_o_presion_o_bulto_en_pelvis, sintoma)
+category(dolor_o_hinchazon_o_presion_en_abdomen, sintoma)
+category(necesidad_de_orinar_frecuentemente, sintoma)
+category(dificultad_para_comer, sintoma)
+category(sensacion_de_llenura, sintoma)
+category(problemas_gastrointestinales, sintoma)
+category(gases, sintoma)
+category(estrennimiento, sintoma)
+
+# Mama
+category(aparicion_de_nodulo, sintoma)
+category(retraccion_de_la_piel_del_pezon, sintoma)
+category(secrecion_sanguinolenta_del_pezon, sintoma)
+
+# Cerebro
+category(dolores_de_cabeza, sintoma)
+category(nauseas_o_vomitos, sintoma)
+category(problemas_de_vision, sintoma)
+category(perdida_gradual_de_la_sensibilidad, sintoma)
+category(dificultad_para_mantener_el_equilibrio, sintoma)
+category(dificultades_con_el_habla, sintoma)
+category(cansancio, sintoma)
+category(confusion_en_asuntos_diarios, sintoma)
+category(dificultad_para_tomar_decisiones, sintoma)
+category(incapacidad_para_seguir_ordenes_sencillas, sintoma)
+category(cambios_en_la_personalidad_o_el_comportamiento, sintoma)
+category(convulsiones, sintoma)
+category(problemas_de_audicion, sintoma)
+
+# higado
+category(perdida_de_peso, sintoma)
+category(perdida_del_apetito, sintoma)
+category(sensacion_de_llenura, sintoma)
+category(nauseas_o_vomitos, sintoma)
+category(un_agrandamiento_del_higado, sintoma)
+category(dolor_en_el_abdomen, sintoma)
+category(picazon, sintoma)
+category(ictericia, sintoma)
+category(hinchazon_o_acumulacion_de_liquido_en_abdomen, sintoma)
+
+# Rinnones
+category(perdida_de_peso, sintoma)
+category(sangre_en_la_orina, sintoma)
+category(perdida_del_apetito, sintoma)
+category(presion_arterial_alta, sintoma)
+category(dolor_o_presion_en_el_costado_o_la_espalda, sintoma)
+category(masa_o_bulto_en_el_costado_o_la_espalda, sintoma)
+category(hinchazon_de_los_tobillos_y_las_piernas, sintoma)
+category(anemia, sintoma)
+category(fatiga, sintoma)
+category(fiebre, sintoma)
+
+# Testiculos
+category(bulto_indoloro_o_hinchazon_en_testiculos, sintoma)
+category(dolor_molestias_o_entumecimiento_en_testiculos, sintoma)
+category(sensacion_de_pesadez_en_el_escroto, sintoma)
+category(dolor_sordo_en_la_parte_del_abdomen_o_la_ingle, sintoma)
+category(acumulacion_subita_de_liquido_en_el_escroto, sintoma)
+category(sensibilidad_o_aumento_de_tamanno_de_las_mamas, sintoma)
+category(dolor_region_lumbar_inferior, sintoma)
+category(falta_de_aire, sintoma)
+category(hinchazon_de_piernas, sintoma)
+
+# traquea
+category(dolor_garganta_que_no_desaparece, sintoma)
+category(tos_constante, sintoma)
+category(dolor_al_tragar, sintoma)
+category(disfagia, sintoma)
+category(dolor_de_oidos, sintoma)
+category(dificultad_para_respirar, sintoma)
+category(perdida_de_peso, sintoma)
+category(protuberancia_o_masa_en_el_cuello, sintoma)
 
 category(quimioterapia, tratamiento)
 category(cirugia, tratamiento)
@@ -142,6 +239,7 @@ type_terms(bulto_en_pelvis, dolor_o_hinchazon_o_presion_o_bulto_en_pelvis)
 type_terms(dolor_en_abdomen, dolor_o_hinchazon_o_presion_en_abdomen)
 type_terms(hinchazon_en_abdomen, dolor_o_hinchazon_o_presion_en_abdomen)
 type_terms(presion_en_abdomen, dolor_o_hinchazon_o_presion_en_abdomen)
+type_terms(gas, gases)
 #END
 
 tumor_sintomas(ovarios,dolor_o_hinchazon_o_presion_o_bulto_en_pelvis)
