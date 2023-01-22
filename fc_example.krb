@@ -1,0 +1,21 @@
+
+#tumor_of
+#    foreach
+#	system.tumor_of($organ)
+    assert
+    system.tumor_organ($organ, organ)
+
+tumor_treatment_of
+    foreach
+    system.tumor_of($organ)
+	system.tumor_treatment_of($treatment, $stage)
+    assert
+    system.tumor_treatment($organ, $treatment, $stage, organ, treatment, stage)
+
+tumor_symptom_of
+    foreach
+    system.tumor_of($organ)
+    system.tumor_symptom_of($organ,$symptom)
+    assert
+    system.tumor_symptom($organ, $symptom, organ, symptom)
+
