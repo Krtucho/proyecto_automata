@@ -13,7 +13,6 @@ from dicc import dicc_partes_cuerpos_sintomas
 # Side Bar
 st.sidebar.text("Comandos")#add_rows(["Commands:", "/diagnostico"])
 st.sidebar.text("/diagnostico")
-st.sidebar.text("/diagnostico")
 
 cant_questions=0
 sexo = ""

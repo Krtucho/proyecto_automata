@@ -86,8 +86,8 @@ relation_cat_cat(cancer, sintoma, presentar)
 
 
 # Relacion organo-sintoma
-relation_cat_cat(organ, sintoma, presentar)
-#relation_cat_cat(sintoma, organ, presentar)
+relation_cat_cat(organo, sintoma, presentar)
+relation_cat_cat(sintoma, organo, presentar)
 
 # Relacion cancer-organo
 relation_cat_cat(cancer, organo, de)
@@ -98,6 +98,9 @@ relation_cat_cat(cancer, organo, de)
 #cancer_sintoma("Cambios en los senos", tumor)
 
 # Instancias de categorias
+category(pancreas, cancer)
+category(cerebro, cancer)
+
 category(cerebro, organo)
 category(higado, organo)
 category(pancreas, organo)
@@ -121,8 +124,6 @@ category(nervioso, tejido)
 category(dolor, sintoma)
 
 # Pancreas
-category(ictericia, sintoma)
-category(perdida_de_peso, sintoma)
 category(dolor_en_abdomen, sintoma)
 category(dolor_en_espalda, sintoma)
 category(esteatorrea, sintoma)
@@ -133,7 +134,6 @@ category(dolor_o_hinchazon_o_presion_o_bulto_en_pelvis, sintoma)
 category(dolor_o_hinchazon_o_presion_en_abdomen, sintoma)
 category(necesidad_de_orinar_frecuentemente, sintoma)
 category(dificultad_para_comer, sintoma)
-category(sensacion_de_llenura, sintoma)
 category(problemas_gastrointestinales, sintoma)
 category(gases, sintoma)
 category(estrennimiento, sintoma)
@@ -145,8 +145,6 @@ category(secrecion_sanguinolenta_del_pezon, sintoma)
 
 # Cerebro
 category(dolores_de_cabeza, sintoma)
-category(nauseas_o_vomitos, sintoma)
-category(problemas_de_vision, sintoma)
 category(perdida_gradual_de_la_sensibilidad, sintoma)
 category(dificultad_para_mantener_el_equilibrio, sintoma)
 category(dificultades_con_el_habla, sintoma)
@@ -159,8 +157,6 @@ category(convulsiones, sintoma)
 category(problemas_de_audicion, sintoma)
 
 # higado
-category(perdida_de_peso, sintoma)
-category(perdida_del_apetito, sintoma)
 category(sensacion_de_llenura, sintoma)
 category(nauseas_o_vomitos, sintoma)
 category(un_agrandamiento_del_higado, sintoma)
@@ -170,7 +166,6 @@ category(ictericia, sintoma)
 category(hinchazon_o_acumulacion_de_liquido_en_abdomen, sintoma)
 
 # Rinnones
-category(perdida_de_peso, sintoma)
 category(sangre_en_la_orina, sintoma)
 category(perdida_del_apetito, sintoma)
 category(presion_arterial_alta, sintoma)
@@ -195,12 +190,38 @@ category(hinchazon_de_piernas, sintoma)
 # traquea
 category(dolor_garganta_que_no_desaparece, sintoma)
 category(tos_constante, sintoma)
-category(dolor_al_tragar, sintoma)
-category(disfagia, sintoma)
 category(dolor_de_oidos, sintoma)
 category(dificultad_para_respirar, sintoma)
-category(perdida_de_peso, sintoma)
 category(protuberancia_o_masa_en_el_cuello, sintoma)
+
+# nariz
+category(dificultad_para_respirar_por_la_nariz, sintoma)
+category(perdida_del_sentido_del_olfato, sintoma)
+category(sangrados_nasales, sintoma)
+category(secrecion_de_la_nariz, sintoma)
+category(dolor_o_hinchazon_facial, sintoma)
+category(ojos_llorosos, sintoma)
+category(llaga_o_lesion_en_el_paladar, sintoma)
+category(problemas_de_vision, sintoma)
+category(bulto_en_el_cuello, sintoma)
+category(dificultad_para_abrir_la_boca, sintoma)
+
+# esofago
+category(disfagia, sintoma)
+category(perdida_de_peso, sintoma)
+category(dolor_o_presion_o_ardor_en_el_pecho, sintoma)
+category(acidez_estomacal_o_indigestion, sintoma)
+category(tos_o_ronquera, sintoma)
+
+# laringe
+category(disfonia, sintoma)
+category(dolor_a_la_deglucion, sintoma)
+category(dolor_irradiado_hacia_el_oido, sintoma)
+
+# tiroides
+category(cambios_en_la_voz, sintoma)
+category(hinchazon_de_los_ganglios_linfaticos_en_el_cuello, sintoma)
+category(dolor_en_el_cuello_y_en_la_garganta, sintoma)
 
 category(quimioterapia, tratamiento)
 category(cirugia, tratamiento)
@@ -371,7 +392,6 @@ type_terms(masa_en_el_cuello, protuberancia_o_masa_en_el_cuello)
 
 tumor_sintomas(traquea, dolor_garganta_que_no_desaparece)
 tumor_sintomas(traquea, tos_constante)
-tumor_sintomas(traquea, dolor_al_tragar)
 tumor_sintomas(traquea, disfagia)
 tumor_sintomas(traquea, dolor_de_oidos)
 tumor_sintomas(traquea, dificultad_para_respirar)
@@ -398,6 +418,7 @@ tumor_sintomas(nariz, bulto_en_el_cuello)
 tumor_sintomas(nariz, dificultad_para_abrir_la_boca)
 
 type_terms(dificultad_para_tragar, disfagia)
+type_terms(dolor_al_tragar, disfagia)
 
 type_terms(dolor_en_el_pecho, dolor_o_presion_o_ardor_en_el_pecho)
 type_terms(presion_en_el_pecho, dolor_o_presion_o_ardor_en_el_pecho)

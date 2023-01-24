@@ -22,8 +22,12 @@ class CatChunk(Chunk):
         self.text_chunk = chunk
     
     def __str__(self) -> str:
-        return super().__str__()
-
+        # return super().__str__()
+        output:str = ""#f"chunk: {self.text_chunk}:\nchunk_type: {self.chunk_type}\n"
+        for relationship in self.relationships:
+            output += f"{relationship.relationship[0]} {relationship.relationship[2]} {relationship.relationship[1]}\n"
+        return output
+        
 class CatCatChunk(Chunk):
     def __init__(self, left_cat:CatChunk, right_cat:CatChunk, cat_relationships: list) -> None:
         self.chunk = f"{left_cat.chunk} {right_cat.chunk}"
@@ -32,7 +36,11 @@ class CatCatChunk(Chunk):
         self.chunk_type = "cat_cat"
 
     def __str__(self) -> str:
-        return super().__str__()
+        # return super().__str__()
+        output:str = ""#f"chunk: {self.text_chunk}:\nchunk_type: {self.chunk_type}\n"
+        for relationship in self.relationships:
+            output += f"{relationship.relationship[1]} {relationship.relationship[2]} {relationship.relationship[4]} {relationship.relationship[0]} {relationship.relationship[3]}\n"
+        return output
 
 class TermChunk(Chunk):
     def __init__(self, chunk, term_instances=None, cat=None, found=None) -> None:
@@ -45,7 +53,11 @@ class TermChunk(Chunk):
         self.text_chunk = self.chunk
 
     def __str__(self) -> str:
-        return super().__str__()
+        # return super().__str__()
+        output:str = ""#f"chunk: {self.text_chunk}:\nchunk_type: {self.chunk_type}\n"
+        for relationship in self.relationships:
+            output += f"{relationship.relationship[0]} {relationship.relationship[2]} {relationship.relationship[1]}\n"
+        return output
 
 class RelChunk(Chunk):
     def __init__(self, chunk, rel_instances) -> None:
@@ -76,10 +88,14 @@ class CatTermChunk(Chunk):
         self.terms_cat = terms_cat
 
         self.text_chunk = f"{cat_chunk} {term_chunk}"
-        self.relationships = []
+        self.relationships = relationships
 
     def __str__(self) -> str:
-        return super().__str__()
+        # return super().__str__()
+        output:str = ""#f"chunk: {self.text_chunk}:\nchunk_type: {self.chunk_type}\n"
+        for relationship in self.relationships:
+            output += f"{relationship.relationship[0]} {relationship.relationship[1]} {relationship.relationship[2]}\n"
+        return output
 
 class RelCatTermChunk(Chunk):
     def __init__(self, relationships) -> None:
@@ -88,7 +104,12 @@ class RelCatTermChunk(Chunk):
         self.text_chunk = "rel_cat_term"
         if len(relationships) > 0:
             relationship = relationships[0]
-            self.text_chunk = f"{relationship.tags[0]} {relationship.tags[1]} {relationship.tags[2]} {relationship.tags[3]} {relationship.tags[4]}"
+            self.text_chunk = f"{relationship.tags[0]} {relationship.tags[2]} {relationship.tags[4]} {relationship.tags[1]} {relationship.tags[3]}"
+            # self.text_chunk = f"{relationship.tags[0]} {relationship.tags[1]} {relationship.tags[2]} {relationship.tags[3]} {relationship.tags[4]}"
 
     def __str__(self) -> str:
-        return super().__str__()
+        # return super().__str__()
+        output:str = ""#f"chunk: {self.text_chunk}:\nchunk_type: {self.chunk_type}\n"
+        for relationship in self.relationships:
+            output += f"{relationship.relationship[0]} {relationship.relationship[2]} {relationship.relationship[4]} {relationship.relationship[1]} {relationship.relationship[3]}\n"
+        return output

@@ -126,6 +126,14 @@ has_recurrent_term_no
     use has_recurrent_term($name, $term)
     when
         system.type_terms($name, $term)
+        #has_category($name, $category, $relationship)
+
+has_recurrent_term_ca
+    use has_recurrent_term($name, $term)
+    when
+        has_category($name, $category, $relationship)
+        $term=$name
+        #system.type_terms($name, $term)
 
 #has_recurrent_term_no_vic
 #    use has_recurrent_term($name, $term)

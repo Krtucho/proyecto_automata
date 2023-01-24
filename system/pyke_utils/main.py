@@ -69,7 +69,9 @@ tumors_dict = driver.tumors_has_many_symptoms(['dolores_de_cabeza', 'dificultad_
 # print(ask("sintomas de cancer de pancreas"))
 # ask("ictericia y gases")
 
-ask("tumor")
+# ask("sintomas y cancer")
+ask("tumor de pancreas")
+# ask("sintomas que presenta tumor de pancreas")
 
 # enfermedad etapa
 # enfermedad sintoma
