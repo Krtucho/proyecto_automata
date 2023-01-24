@@ -67,7 +67,9 @@ tumors_dict = driver.tumors_has_many_symptoms(['dolores_de_cabeza', 'dificultad_
 # Para probar como se comporta el sistema experto con la consulta que se encuentra en la variable chunks(procesada por nlp) descomente la siguiente linea
 # resp = driver.get_answer('dolor_en_abdomen', chunks)#PreprocessText.normalize(words)) 
 # print(ask("sintomas de cancer de pancreas"))
-ask("ictericia y gases")
+# ask("ictericia y gases")
+
+ask("tumor")
 
 # enfermedad etapa
 # enfermedad sintoma
