@@ -16,12 +16,13 @@ class Pacient:
         self.apparatus=None
 
 class Doctor:
-    def __init__(self, specialty, work_hours, pacients, name):
+    def __init__(self, specialty, work_hours, pacients, name, id):
         self.specialty=specialty
         self.work_hours=work_hours
         self.pacients=pacients
         self.available=True
         self.name=name
+        self.id=id
 
 class Consultation_room:
     def __init__(self):
@@ -31,6 +32,7 @@ class Apparatus:
     def __init__(self, name, id):
         self.id=id
         self.name=name
+        # self.type_of_therapy=type_of_therapy
         self.available=True
 
 class Therapy_apparatus(Apparatus):
@@ -72,8 +74,9 @@ class Graph:
 
     def find_edge(self, node1, node2):
         for edge in self.edges:
-            if edge.node1 == node1 and self.node2 ==node2:
+            if edge.node1.name == node1.name and self.node2.name ==node2.name:
                 return edge
+        return None
 
     def has_edge(self, node1, node2):
         if self.adj_list[node1]:

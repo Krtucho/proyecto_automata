@@ -256,10 +256,11 @@ def tumors_has_many_symptoms(symptoms:list)-> dict:
     
     for symptom in symptoms:
         for tumor in tumor_has_symptom(symptom):
+            tumor_name = "cancer de " + tumor
             if tumors_dict.__contains__(tumor):
-                tumors_dict[tumor].append(symptom)
+                tumors_dict[tumor_name].append(symptom)
             else:
-                tumors_dict[tumor] = [symptom]
+                tumors_dict[tumor_name] = [symptom]
 
     return tumors_dict
     
