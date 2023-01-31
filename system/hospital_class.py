@@ -1,4 +1,10 @@
+from enum import Enum
 
+class Type_of_therapy(Enum):
+    Quimioterapia = 1
+    Radioterapia = 2
+    Cirugia = 3
+    
 class Pacient:
     def __init__(self, type_tumor, therapies_receiving, possibles_tumors, name): #sex, symptoms, days_with_symptoms, therapies_received, frecuency_symptoms, chronic_diseases,'"""" type_tumor, therapies_receiving, possibles_tumors):
         # self.sex=sex
@@ -37,10 +43,16 @@ class Apparatus:
 
 class Therapy_apparatus(Apparatus):
     def __init__(self, type_of_therapy, name, id):
-        self.id=id
-        self.type_of_therapy=type_of_therapy
-        self.name=name
+        super().__init__(name, id)
+        self.c=type_of_therapy
         self.available=True
+
+class Cirugia(Apparatus):
+    def __init__(self, name, id, total_hours, hours_elapsed):
+        super().__init__(name, id)
+        self.type_of_therapy=Type_of_therapy.Cirugia
+        self.total_hours=total_hours
+        self.hours_elapsed=hours_elapsed
 
 class Medical_consultation:
     def __init__(self, doctor, pacient, consultation_room, duration):
