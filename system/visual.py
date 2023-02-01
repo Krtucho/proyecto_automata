@@ -57,7 +57,7 @@ if 'patients_list' not in st.session_state:
     st.session_state.patients_list = []
     
 if 'actual_patient' not in st.session_state:
-    st.session_state.actual_patient = Pacient(None, [], [], None)
+    st.session_state.actual_patient = Pacient(None, None, [], None)
 
 if 'actual_patient_tumor' not in st.session_state:
     st.session_state.actual_patient_tumor = False
@@ -376,7 +376,7 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
                     if st.session_state.question_number == 3:
                         st.session_state.actual_patient.type_tumor = item[0]
                     elif st.session_state.question_number == 4:
-                        st.session_state.actual_patient.therapies_receiving.append(item[0])
+                        st.session_state.actual_patient.therapies_receiving = item[0]
                         
                     continue
                 # Newwwwwwwwwwwww
