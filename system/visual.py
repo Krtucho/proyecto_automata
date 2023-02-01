@@ -102,6 +102,9 @@ def add_patient_possible_tumors(symptoms):
         st.session_state.actual_patient.possibles_tumors.append(tumor)# = [key for key,_ in possible_tumors.items()]
     return possible_tumors
 
+def update_variables():
+    st.session_state.actual_patient_tumor = False
+
 def set_choices_and_answers(command):
     """Se supone que en este metodo se cree la maquinaria para que dado un comando, se establescan las preguntas y posibles opciones a seleccionar por el usuario
     \nEx: Si el comando es /diagnostico:
@@ -291,6 +294,10 @@ def process_query(query:str):
         st.session_state.selected = []
         st.session_state.finished = False
         st.session_state.question_number = 0
+        st.session_state.choices = []
+        st.session_state.questions = []
+        st.session_state.actual_patient_tumor = False
+        st.session_state.actual_patient = Pacient(None, None, [], None)
         set_choices_and_answers(command=query) # Para este caso query sera nuestro comando. Tenerlo en cuenta.
     else:
         return ask(query)
@@ -303,6 +310,10 @@ def exit_quiz():
     st.session_state.finished = False
     st.session_state.question_number = 0
     st.session_state.answer = ""
+    st.session_state.choices = []
+    st.session_state.questions = []
+    st.session_state.actual_patient_tumor = False
+    st.session_state.actual_patient = Pacient(None, None, [], None)
 
 
 q, q_choices =  None, None # Preguntas y respuestas temporales para el quiz
@@ -401,7 +412,9 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
         if st.session_state.actual_patient_tumor:
             if st.session_state.question_number == 4:
                 print_actual_patient()
+                st.session_state.patients_list.append(st.session_state.actual_patient)
                 st.session_state.finished = True
+                print(st.session_state.patients_list)
 
         # if cant_questions < len(st.session_state.questions):
         st.session_state.question_number += 1
@@ -437,7 +450,7 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
                                         # El metodo set_answer es para asignar dicha respuesta a las variables o codigos que renderizaran este texto
                     # ****************************************************** #
             print_actual_patient()
-
+            print(st.session_state.patients_list)
 
 
         # print("Despues set answer y demas")
@@ -480,7 +493,6 @@ else:
             # print(st.session_state.process )
             if st.session_state.process == "writing": # Si se ha encontrado con que no es necesario comenzar con el menu interactivo. Se establece como ultima respuesta del sistema experto la que este acaba de dar a la consulta realizada por el usuario
                 set_answer(answer)
-
             st.experimental_rerun()
 
 #*********************************
