@@ -428,7 +428,7 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
             # lista.append(st.session_state.selected[2])
             #  = driver.tumors_has_many_symptoms(lista)
             tumors_dict = add_patient_possible_tumors([st.session_state.selected[2]])
-            st.session_state.patients_list.add(st.session_state.actual_patient)
+            st.session_state.patients_list.append(st.session_state.actual_patient)
             print("tumors dict")
             print(tumors_dict)
             print(tumors_dict.keys())
