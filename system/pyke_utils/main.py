@@ -1,7 +1,7 @@
 import sys
 # Descomentar la siguiente linea
 # sys.path.append('your_path') # Ex: 'system/pyke_utils'
-# sys.path.append('/home/krtucho/School/IA_Sim/github/proyecto_automata/system/pyke_utils')
+sys.path.append('/home/krtucho/School/IA_Sim/github/proyecto_automata/system/pyke_utils')
 
 import examples.system.driver as driver
 
