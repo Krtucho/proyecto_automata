@@ -16,9 +16,6 @@ class PreprocessText():
         """Dada una oracion (sent:str) Devuelve una lista de tuplas de la forma (text, lemma, pos) con los tokens que formen parte de esta"""
         document = nlp(sent)
 
-    # for token in document:
-    #     print(token.text, token.lemma_, token.pos_, token.dep_)
-
         return [(token.text, token.lemma_, token.pos_) for token in document]
 
     @staticmethod
