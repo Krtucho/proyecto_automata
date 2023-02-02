@@ -7,9 +7,10 @@ from pyke_utils.main import *
 from dicc import dicc_partes_cuerpos_sintomas
 
 from hospital_class import Pacient
-
+from CSP import *
 # El comando clave para acceder al apartado del cuestionario sera: /diagnostico
 # Se tendra que escribir en el input que sale en la pagina web y dar click en submit
+
 
 # Side Bar
 st.sidebar.text("Comandos")#add_rows(["Commands:", "/diagnostico"])
@@ -19,6 +20,7 @@ cant_questions=0
 sexo = ""
 # sintomas_seleccionados=[]
 input_answer=False
+csp_list=[]
 
 # choices=[]
 # questions=[]
@@ -77,6 +79,9 @@ if 'name_input' not in st.session_state:
 # ******************************************************************* #
 
 # name_input = None
+
+
+
 
 def build_patient_quiz():
     print("inside build_patient_quiz()")
@@ -512,5 +517,50 @@ if not st.session_state.process == "quiz":
 if clear_users_btn:
     st.session_state.patients_list = []
 elif make_test_btn:
-    answer = "csp(st.session_state.patients_list)"
+    #--------------------------------------------------------CSP-----------------------------------------------------------------------------
+    cant_pacientes=len(doctors) * 3
+    if len(st.session_state.patients_list)>=cant_pacientes:
+        for pacient in st.session_state.patients_list:
+                print("Proximo paciente")
+                print(pacient.name)
+                print("tipo de tumor")
+                print(pacient.type_tumor)
+                print("terapias recibidas")
+                print(pacient.therapies_receiving)
+                print("posibles tumores")
+                print(pacient.possibles_tumors)
+                # for doctor in solution.doctors:
+                #     print(doctor.name)
+                # for aparato in solution.apparatus:
+                #     print(aparato.name)
+        csp_list = hospital_simulation(st.session_state.patients_list, aparatos, cirugias, doctors)
+        print("CSP")
+        print(csp_list)
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+        answer=""
+        for pacient_solutions in csp_list:
+            for paciente, solution in pacient_solutions.items():
+                if not paciente.type_tumor == None:
+                    if len(solution.apparatus) > 0 and len(solution.doctors) > 0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Tipo de tumor: " + paciente.type_tumor + " doctor: " + solution.doctors[0].name + " Especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
+                    elif len(solution.apparatus) > 0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Tipo de tumor: " + paciente.type_tumor + " Aparato o Sala: " + solution.apparatus[0].name
+                    else:
+                        answer=answer+"\n" + "Paciente: " + paciente.name + " Tipo de tumor: " + paciente.type_tumor
+                else:
+                    tumores=str(paciente.possibles_tumors)
+                    if len(solution.apparatus) > 0 and len(solution.doctors) >0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores +" doctor: " + solution.doctors[0].name + " Especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
+                    elif len(solution.apparatus) > 0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores  +  " Aparato o Sala: " + solution.apparatus[0].name
+                    else:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores 
+        print(answer)        
+    # answer = "csp(st.session_state.patients_list)"
     set_answer(answer)
+    st.text(f"Answer:\n {st.session_state.answer}")
+    st.session_state.answer = ""
+
+print("lista de pacientes")
+print(st.session_state.patients_list)
+
