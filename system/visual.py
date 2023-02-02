@@ -6,19 +6,21 @@ from streamlit.script_request_queue import RerunData
 from pyke_utils.main import *
 from dicc import dicc_partes_cuerpos_sintomas
 
-
+from hospital_class import Pacient
+from CSP import *
 # El comando clave para acceder al apartado del cuestionario sera: /diagnostico
 # Se tendra que escribir en el input que sale en la pagina web y dar click en submit
 
+
 # Side Bar
 st.sidebar.text("Comandos")#add_rows(["Commands:", "/diagnostico"])
-st.sidebar.text("/diagnostico")
 st.sidebar.text("/diagnostico")
 
 cant_questions=0
 sexo = ""
 # sintomas_seleccionados=[]
 input_answer=False
+csp_list=[]
 
 # choices=[]
 # questions=[]
@@ -45,13 +47,25 @@ if 'choices' not in st.session_state:
 if 'questions' not in st.session_state:
     st.session_state.questions = [] # Preguntas
 
+if 'symptoms_frecuencies' not in st.session_state:
+    st.session_state.symptoms_frecuencies = {}
 
 # ************************ YOUR CODE HERE *************************** #
 if 'indroductory_text' not in st.session_state:
     st.session_state.introductory_text = "your_text" # Asignar a esta variable texto introductorio para mostrar en la 1ra pregunta del cuestionario
 # ******************************************************************* #
 
+if 'patients_list' not in st.session_state:
+    st.session_state.patients_list = []
     
+if 'actual_patient' not in st.session_state:
+    st.session_state.actual_patient = Pacient(None, None, [], None)
+
+if 'actual_patient_tumor' not in st.session_state:
+    st.session_state.actual_patient_tumor = False
+
+if 'name_input' not in st.session_state:
+    st.session_state.name_input = ''
 # ************************ YOUR CODE HERE ONLY FOR TEST PURPOSES, SO...DO NOT TOUCH IT NOW *************************** #
 # Por el momento estas preguntas y respuestas solamente funcionan para el comando diagnostico 
 # Para otros comandos se debe de modificar la variable st.session_state.
@@ -64,7 +78,56 @@ if 'indroductory_text' not in st.session_state:
 # st.session_state.questions=questions
 # ******************************************************************* #
 
+# name_input = None
 
+#--------------------------------------------------------CSP-----------------------------------------------------------------------------
+cant_pacientes=len(doctors) 
+if len(st.session_state.patients_list)>=cant_pacientes:
+    for pacient in st.session_state.patients_list:
+            print("Proximo paciente")
+            print(pacient.name)
+            print("tipo de tumor")
+            print(pacient.type_tumor)
+            print("terapias recibidas")
+            print(pacient.therapies_receiving)
+            print("posibles tumores")
+            print(pacient.possibles_tumors)
+            # for doctor in solution.doctors:
+            #     print(doctor.name)
+            # for aparato in solution.apparatus:
+            #     print(aparato.name)
+    csp_list = hospital_simulation(st.session_state.patients_list, aparatos, cirugias, doctors)
+    print("CSP")
+    print(csp_list)
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+def build_patient_quiz():
+    print("inside build_patient_quiz()")
+
+    st.session_state.questions.append("Seleccione los tumores")
+    st.session_state.choices.append(["cerebro","pancreas","pulmones","ovarios","mama"])
+    st.session_state.questions.append("Seleccione las terapias")
+    st.session_state.choices.append(["cirugia ","quimioterapia","radioterapia","cuidados paulativos","No he recibido terapia en estos ultimos meses"])
+
+
+def print_actual_patient():
+    print("*********************** Actual Patient ****************")
+    print(f"name: {st.session_state.actual_patient.name}")
+    print(f"possible_tumors: {st.session_state.actual_patient.possibles_tumors}")
+    print(f"theraphies: {st.session_state.actual_patient.therapies_receiving}")
+    print(f"type_tumor: {st.session_state.actual_patient.type_tumor}")
+                
+def add_patient_possible_tumors(symptoms):
+    possible_tumors =  driver.tumors_has_many_symptoms(symptoms)# Find_tumors
+    pos_tumors_list = [key for key,_ in possible_tumors.items()]
+    print(pos_tumors_list)
+    for tumor in pos_tumors_list:
+        st.session_state.actual_patient.possibles_tumors.append(tumor)# = [key for key,_ in possible_tumors.items()]
+    return possible_tumors
+
+def update_variables():
+    st.session_state.actual_patient_tumor = False
 
 def set_choices_and_answers(command):
     """Se supone que en este metodo se cree la maquinaria para que dado un comando, se establescan las preguntas y posibles opciones a seleccionar por el usuario
@@ -76,20 +139,44 @@ def set_choices_and_answers(command):
 
     print("this is the way i supose to work")
 
+    if st.session_state.actual_patient_tumor and st.session_state.question_number > 3:
+        return
+
+
     if command == "/diagnostico":
         if st.session_state.question_number == 0:
             if not ["Femenino", "Masculino"] in st.session_state.choices:
                 st.session_state.choices.append(["Femenino", "Masculino"])
             if not "Que sexo presenta?" in st.session_state.questions:
                 st.session_state.questions.append("Que sexo presenta?")
-            
         elif st.session_state.question_number == 1:
-            sexo=st.session_state.selected
-            if not ["en la cabeza","en el estomago","en las extremidades","en el pecho","en la parte baja de la cintura","en la espalda","en el cuello"] in st.session_state.choices:
-                st.session_state.choices.append(["en la cabeza","en el estomago","en las extremidades","en el pecho","en la parte baja de la cintura","en la espalda","en el cuello"])
-            if not "Seleccione las parte del cuerpo donde presenta algun malestar o sintoma" in st.session_state.questions:
-                st.session_state.questions.append("Seleccione las parte del cuerpo donde presenta algun malestar o sintoma")
+            # name_input = st.text_input("Write your name")
+            st.session_state.name_input = st.text_input("Write your name")
+            # print(f"name_input: {name_input}")
+            if not "Enter your name" in st.session_state.questions:
+                st.session_state.questions.append("Enter your name")
+            if not [] in st.session_state.choices:
+                st.session_state.choices.append([])
         elif st.session_state.question_number == 2:
+            if not "Conoce el tipo de cancer que presenta? Marque si la conoce" in st.session_state.questions:
+                st.session_state.questions.append("Conoce el tipo de cancer que presenta? Marque si la conoce")
+            if not ["si, lo conozco"] in st.session_state.choices:
+                st.session_state.choices.append(["si, lo conozco"])
+        elif st.session_state.question_number == 3:
+            # st.session_state.actual_patient_tumor = False
+            print("*********************** Question 3 *********************")
+            print(st.session_state.actual_patient_tumor)
+            if st.session_state.actual_patient_tumor:
+                build_patient_quiz()
+
+        # elif st.session_state.question_number == 4:
+            else:
+                sexo=st.session_state.selected
+                if not ["en la cabeza","en el estomago","en las extremidades","en el pecho","en la parte baja de la cintura","en la espalda","en el cuello"] in st.session_state.choices:
+                    st.session_state.choices.append(["en la cabeza","en el estomago","en las extremidades","en el pecho","en la parte baja de la cintura","en la espalda","en el cuello"])
+                if not "Seleccione las parte del cuerpo donde presenta algun malestar o sintoma" in st.session_state.questions:
+                    st.session_state.questions.append("Seleccione las parte del cuerpo donde presenta algun malestar o sintoma")
+        elif st.session_state.question_number == 4:
             if len(st.session_state.selected) >1:
                 print("Entre aquiiiiii")
                 parte_cuerpo=[]
@@ -129,13 +216,13 @@ def set_choices_and_answers(command):
                         opciones=[sint for sint in dicc_partes_cuerpos_sintomas[item]]
                         if not opciones in st.session_state.choices:
                             st.session_state.choices.append(opciones)
-        elif st.session_state.question_number == 3:
+        elif st.session_state.question_number == 5:
             if not ["una semana","dos semanas","tres semanas","un mes","2 meses","mas de 2 meses"] in st.session_state.choices:
                 st.session_state.choices.append(["una semana","dos semanas","tres semanas","un mes","2 meses","mas de 2 meses"])
             if not "Cantidad de dias que lleva presentando los sintomas seleccionados" in st.session_state.questions:
                 st.session_state.questions.append("Cantidad de dias que lleva presentando los sintomas seleccionados")
-        elif st.session_state.question_number == 4:
-            if not ["cirugia ","quimioterapia","radioterapia","cuidados paulativos"] in st.session_state.choices:
+        elif st.session_state.question_number == 6:
+            if not ["cirugia ","quimioterapia","radioterapia","cuidados paulativos","No he recibido terapia en estos ultimos meses"] in st.session_state.choices:
                 st.session_state.choices.append(["cirugia ","quimioterapia","radioterapia","cuidados paulativos","No he recibido terapia en estos ultimos meses"])
             if not "Ha recibido terapia en los ultimos 5 meses? Si es el caso por favor marque la terapia que ha recibido" in st.session_state.questions:
                 st.session_state.questions.append("Ha recibido terapia en los ultimos 5 meses? Si es el caso por favor marque la terapia que ha recibido")
@@ -144,7 +231,27 @@ def set_choices_and_answers(command):
             # ************************ YOUR CODE HERE CARLOS *************************** #
             #   eh siguiendo el orden de la hoja de supone que ahora vendria lo de la frecuencia de los sintomas, en realidad este orden no esta bien pero eso 
             #   es lo de menos ahora 
+        elif st.session_state.question_number == 7:
+            # if not ["cirugia ","quimioterapia","radioterapia","cuidados paulativos"] in st.session_state.choices:
+            #     st.session_state.choices.append(["cirugia ","quimioterapia","radioterapia","cuidados paulativos","No he recibido terapia en estos ultimos meses"])
+            if not "Cuanto tiempo lleva presentando los sintomas" in st.session_state.questions:
+                st.session_state.questions.append("Cuanto tiempo lleva presentando los sintomas")
+                final_choices = []
+                frecuencies = ["varias veces al dia","diario", "semanal", "mensual"]
+                for sym, _ in st.session_state.symptoms_frecuencies.items():
+                    for frecuency in frecuencies:
+                        final_choices.append(f"{sym}-{frecuency}")
+
+                st.session_state.choices.append(final_choices)
+                
             # ******************************************************************* #
+
+            print("Choices")
+            print(st.session_state.choices)
+            print("Questions")
+            print(st.session_state.questions)
+            print("Selected")
+            print(st.session_state.selected)
         else:
             if not ["Asma","Epilepsia","Diabetes","Hipertension","Obesidad"] in st.session_state.choices:
                 st.session_state.choices.append(["Asma","Epilepsia","Diabetes","Hipertension","Obesidad"])
@@ -182,6 +289,8 @@ def get_question(question_number):
     print("Llegue a este metodoooooooo")
     print(question_number)
     print(len(st.session_state.questions))
+
+
     
     if not st.session_state.finished:
         print("Estoy dentro de get_question")
@@ -209,6 +318,10 @@ def process_query(query:str):
         st.session_state.selected = []
         st.session_state.finished = False
         st.session_state.question_number = 0
+        st.session_state.choices = []
+        st.session_state.questions = []
+        st.session_state.actual_patient_tumor = False
+        st.session_state.actual_patient = Pacient(None, None, [], None)
         set_choices_and_answers(command=query) # Para este caso query sera nuestro comando. Tenerlo en cuenta.
     else:
         return ask(query)
@@ -221,6 +334,10 @@ def exit_quiz():
     st.session_state.finished = False
     st.session_state.question_number = 0
     st.session_state.answer = ""
+    st.session_state.choices = []
+    st.session_state.questions = []
+    st.session_state.actual_patient_tumor = False
+    st.session_state.actual_patient = Pacient(None, None, [], None)
 
 
 q, q_choices =  None, None # Preguntas y respuestas temporales para el quiz
@@ -229,6 +346,9 @@ chk = {}    # Diccionario con llaves como strings(opciones) y valores como check
 
 btn_submit = None
 write_btn = None
+
+clear_users_btn = None
+make_test_btn = None
 
 
 if st.session_state.process == "quiz": # Si se encuentra realizando el quiz se les dara valores a las variables necesarias, sino, todas se van con None
@@ -266,15 +386,63 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
         print("Ahora estoy aqui dentro")
         print(chk)
             
+        print("********************* Name ******************")
+        # print(st.session_state.name_input)
+        if st.session_state.question_number == 1:
+            st.session_state.actual_patient.name = st.session_state.name_input
+
+        # if st.session_state.question_number == 2:
+        #     print("******************* Question Number 2 ******************")
+        #     print(chk)
+
         for item in chk.items():
             if item[1]:
                 st.session_state.selected.append(item[0])
+                print("*********************************** Taking *************************")
+                print(item[0])
+                print(item[1])
+                print(st.session_state.question_number)
+
+                if st.session_state.question_number == 2:
+                    st.session_state.actual_patient_tumor = True
+                    print(st.session_state.actual_patient_tumor)
+
+                if st.session_state.actual_patient_tumor:
+                    if st.session_state.question_number == 3:
+                        st.session_state.actual_patient.type_tumor = item[0]
+                    elif st.session_state.question_number == 4:
+                        st.session_state.actual_patient.therapies_receiving = item[0]
+                        
+                    continue
+                # Newwwwwwwwwwwww
+                # Si es una pregunta del tipo de enfermedad-frecuencia, annadelo al diccionario que contiene las enfermedades con su frecuencias
+                if st.session_state.question_number == 4:# Si se encuentra en la pregunta de sintoma
+                    st.session_state.symptoms_frecuencies[item[0]] = []
+                if st.session_state.question_number == 7:# Si se encuentra en la pregunta de sintoma-frecuencia
+                    substr:str = item[0]
+                    try:
+                        substr = substr.split('-')[0]
+                        st.session_state.symptoms_frecuencies[substr].append(item[0])
+                        print("**************************** Inside symptoms-frecuencies ********************")
+                        print(substr)
+                        print(st.session_state.symptoms_frecuencies[substr])
+                    except Exception as e:
+                        print(e)
+                # End Newwwwwwwwww
+
                 # st.session_state.question_number += 1
         print(st.session_state.selected)
 
-        if cant_questions < len(st.session_state.questions):
-            st.session_state.question_number += 1
-            cant_questions=len(st.session_state.questions)
+        if st.session_state.actual_patient_tumor:
+            if st.session_state.question_number == 4:
+                print_actual_patient()
+                st.session_state.patients_list.append(st.session_state.actual_patient)
+                st.session_state.finished = True
+                print(st.session_state.patients_list)
+
+        # if cant_questions < len(st.session_state.questions):
+        st.session_state.question_number += 1
+            # cant_questions=len(st.session_state.questions)
         
         print("st.session_state.question_number")
         print(st.session_state.question_number)
@@ -285,22 +453,28 @@ if st.session_state.process == "quiz" and not st.session_state.finished: # Si es
         print("sintomas_seleccionados")
         print(st.session_state.selected)
         
-        if st.session_state.question_number > len(st.session_state.questions) or len(st.session_state.questions) == 5:
+        if st.session_state.question_number > len(st.session_state.questions) or len(st.session_state.questions) == 8: # Modified 5->6
             print("termino")
+            print("symptoms frecuencies")
+            for t,f in st.session_state.symptoms_frecuencies.items():
+                print(f"{t}: {f}")
             st.session_state.finished = True
 
             # sintomas_seleccionados=st.session_state.selected
-            lista=[]
-            lista.append(st.session_state.selected[2])
-            tumors_dict = driver.tumors_has_many_symptoms(lista)
+            # lista=[]
+            # lista.append(st.session_state.selected[2])
+            #  = driver.tumors_has_many_symptoms(lista)
+            tumors_dict = add_patient_possible_tumors([st.session_state.selected[2]])
+            st.session_state.patients_list.append(st.session_state.actual_patient)
             print("tumors dict")
             print(tumors_dict)
+            print(tumors_dict.keys())
                     # **************** YOUR CODE HERE ********************** # Primero procesar el contenido de la variables st.session_state.selected(lista con todas las respuestas seleccionadas por el usuario) y luego llamar al metodo set_answer
             set_answer(tumors_dict) # Al entrar en esta parte del metodo se supone que se hayan terminado las preguntas y por tanto el usuario este esperando una respuesta luego de procesar su cuestionario
                                         # El metodo set_answer es para asignar dicha respuesta a las variables o codigos que renderizaran este texto
                     # ****************************************************** #
-
-        
+            print_actual_patient()
+            print(st.session_state.patients_list)
 
 
         # print("Despues set answer y demas")
@@ -343,5 +517,47 @@ else:
             # print(st.session_state.process )
             if st.session_state.process == "writing": # Si se ha encontrado con que no es necesario comenzar con el menu interactivo. Se establece como ultima respuesta del sistema experto la que este acaba de dar a la consulta realizada por el usuario
                 set_answer(answer)
-
             st.experimental_rerun()
+
+#*********************************
+# get name
+# if st.session_state.question_number == :
+#     query = st.text_input("Write your name")
+
+
+def add_patient_name(name):
+    st.session_state.actual_patient.name = name
+
+
+if not st.session_state.process == "quiz":
+    clear_users_btn = st.button('Vaciar lista de pacientes')
+    make_test_btn = st.button('Correr Horario')
+
+if clear_users_btn:
+    st.session_state.patients_list = []
+elif make_test_btn:
+    answer=""
+    for pacient_solutions in csp_list:
+        for paciente, solution in pacient_solutions.items():
+            if paciente.type_tumor == None:
+                if len(solution.apparatus) > 0 and len(solution.doctors) > 0:
+                    answer=answer+"\n" + " Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + " doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + "Aparato o Sala: " + solution.apparatus[0].name
+                elif len(solution.apparatus) > 0:
+                    answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + "Aparato o Sala: " + solution.apparatus[0].name
+                else:
+                    answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor
+            else:
+                tumores=str(paciente.possibles_tumors)
+                if len(solution.apparatus) > 0 and len(solution.doctors) >0:
+                    answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores +" doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
+                elif len(solution.apparatus) > 0:
+                    answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores  +  " Aparato o Sala: " + solution.apparatus[0].name
+                else:
+                    answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores 
+            
+    # answer = "csp(st.session_state.patients_list)"
+    set_answer(answer)
+
+print("lista de pacientes")
+print(st.session_state.patients_list)
+

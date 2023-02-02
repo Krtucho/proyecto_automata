@@ -5,6 +5,7 @@ class Type_of_therapy(Enum):
     Radioterapia = 2
     Cirugia = 3
     
+    
 class Pacient:
     def __init__(self, type_tumor, therapies_receiving, possibles_tumors, name): #sex, symptoms, days_with_symptoms, therapies_received, frecuency_symptoms, chronic_diseases,'"""" type_tumor, therapies_receiving, possibles_tumors):
         # self.sex=sex
@@ -29,6 +30,7 @@ class Doctor:
         self.available=True
         self.name=name
         self.id=id
+        self.hours_elapsed=0
 
 class Consultation_room:
     def __init__(self):
