@@ -80,26 +80,7 @@ if 'name_input' not in st.session_state:
 
 # name_input = None
 
-#--------------------------------------------------------CSP-----------------------------------------------------------------------------
-cant_pacientes=len(doctors) 
-if len(st.session_state.patients_list)>=cant_pacientes:
-    for pacient in st.session_state.patients_list:
-            print("Proximo paciente")
-            print(pacient.name)
-            print("tipo de tumor")
-            print(pacient.type_tumor)
-            print("terapias recibidas")
-            print(pacient.therapies_receiving)
-            print("posibles tumores")
-            print(pacient.possibles_tumors)
-            # for doctor in solution.doctors:
-            #     print(doctor.name)
-            # for aparato in solution.apparatus:
-            #     print(aparato.name)
-    csp_list = hospital_simulation(st.session_state.patients_list, aparatos, cirugias, doctors)
-    print("CSP")
-    print(csp_list)
-#----------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 def build_patient_quiz():
@@ -536,25 +517,45 @@ if not st.session_state.process == "quiz":
 if clear_users_btn:
     st.session_state.patients_list = []
 elif make_test_btn:
-    answer=""
-    for pacient_solutions in csp_list:
-        for paciente, solution in pacient_solutions.items():
-            if paciente.type_tumor == None:
-                if len(solution.apparatus) > 0 and len(solution.doctors) > 0:
-                    answer=answer+"\n" + " Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + " doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + "Aparato o Sala: " + solution.apparatus[0].name
-                elif len(solution.apparatus) > 0:
-                    answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + "Aparato o Sala: " + solution.apparatus[0].name
+    #--------------------------------------------------------CSP-----------------------------------------------------------------------------
+    cant_pacientes=len(doctors) 
+    if len(st.session_state.patients_list)>=cant_pacientes:
+        for pacient in st.session_state.patients_list:
+                print("Proximo paciente")
+                print(pacient.name)
+                print("tipo de tumor")
+                print(pacient.type_tumor)
+                print("terapias recibidas")
+                print(pacient.therapies_receiving)
+                print("posibles tumores")
+                print(pacient.possibles_tumors)
+                # for doctor in solution.doctors:
+                #     print(doctor.name)
+                # for aparato in solution.apparatus:
+                #     print(aparato.name)
+        csp_list = hospital_simulation(st.session_state.patients_list, aparatos, cirugias, doctors)
+        print("CSP")
+        print(csp_list)
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+        answer=""
+        for pacient_solutions in csp_list:
+            for paciente, solution in pacient_solutions.items():
+                if not paciente.type_tumor == None:
+                    if len(solution.apparatus) > 0 and len(solution.doctors) > 0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + " doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + "Aparato o Sala: " + solution.apparatus[0].name
+                    elif len(solution.apparatus) > 0:
+                        answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + "Aparato o Sala: " + solution.apparatus[0].name
+                    else:
+                        answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor
                 else:
-                    answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor
-            else:
-                tumores=str(paciente.possibles_tumors)
-                if len(solution.apparatus) > 0 and len(solution.doctors) >0:
-                    answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores +" doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
-                elif len(solution.apparatus) > 0:
-                    answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores  +  " Aparato o Sala: " + solution.apparatus[0].name
-                else:
-                    answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores 
-            
+                    tumores=str(paciente.possibles_tumors)
+                    if len(solution.apparatus) > 0 and len(solution.doctors) >0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores +" doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
+                    elif len(solution.apparatus) > 0:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores  +  " Aparato o Sala: " + solution.apparatus[0].name
+                    else:
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores 
+        print(answer)        
     # answer = "csp(st.session_state.patients_list)"
     set_answer(answer)
 
