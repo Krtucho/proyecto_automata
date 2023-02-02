@@ -518,7 +518,7 @@ if clear_users_btn:
     st.session_state.patients_list = []
 elif make_test_btn:
     #--------------------------------------------------------CSP-----------------------------------------------------------------------------
-    cant_pacientes=len(doctors) 
+    cant_pacientes=len(doctors) * 3
     if len(st.session_state.patients_list)>=cant_pacientes:
         for pacient in st.session_state.patients_list:
                 print("Proximo paciente")
@@ -542,15 +542,15 @@ elif make_test_btn:
             for paciente, solution in pacient_solutions.items():
                 if not paciente.type_tumor == None:
                     if len(solution.apparatus) > 0 and len(solution.doctors) > 0:
-                        answer=answer+"\n" + " Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + " doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + "Aparato o Sala: " + solution.apparatus[0].name
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Tipo de tumor: " + paciente.type_tumor + " doctor: " + solution.doctors[0].name + " Especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
                     elif len(solution.apparatus) > 0:
-                        answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor + "Aparato o Sala: " + solution.apparatus[0].name
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Tipo de tumor: " + paciente.type_tumor + " Aparato o Sala: " + solution.apparatus[0].name
                     else:
-                        answer=answer+"\n" + "Paciente: " + paciente.name + "Tipo de tumor: " + paciente.type_tumor
+                        answer=answer+"\n" + "Paciente: " + paciente.name + " Tipo de tumor: " + paciente.type_tumor
                 else:
                     tumores=str(paciente.possibles_tumors)
                     if len(solution.apparatus) > 0 and len(solution.doctors) >0:
-                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores +" doctor: " + solution.doctors[0].name + " especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
+                        answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores +" doctor: " + solution.doctors[0].name + " Especialidad: " + solution.doctors[0].specialty + " Aparato o Sala: " + solution.apparatus[0].name
                     elif len(solution.apparatus) > 0:
                         answer=answer+"\n" + " Paciente: " + paciente.name + " Posibles tumores: " + tumores  +  " Aparato o Sala: " + solution.apparatus[0].name
                     else:
@@ -558,6 +558,8 @@ elif make_test_btn:
         print(answer)        
     # answer = "csp(st.session_state.patients_list)"
     set_answer(answer)
+    st.text(f"Answer:\n {st.session_state.answer}")
+    st.session_state.answer = ""
 
 print("lista de pacientes")
 print(st.session_state.patients_list)

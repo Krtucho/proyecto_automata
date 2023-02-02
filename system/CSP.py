@@ -113,9 +113,47 @@ import copy
 #Ejemplo 4 ---------------------------------------------------
 
 doctor1=Doctor("pancreas", 10, None, "Doctor1", 1)
+doctor2=Doctor("pancreas", 10, None, "Doctor2", 2)
+
+doctor3=Doctor("cerebro", 10, None, "Doctor3", 3)
+doctor4=Doctor("cerebro", 10, None, "Doctor4", 4)
+
+doctor5=Doctor("General", 10, None, "Doctor5", 5)
+doctor6=Doctor("General", 10, None, "Doctor6", 6)
+
+doctor7=Doctor("ovarios", 10, None, "Doctor7", 7)
+doctor8=Doctor("ovarios", 10, None, "Doctor8", 8)
+
+doctor9=Doctor("mama", 10, None, "Doctor9", 9)
+doctor10=Doctor("mama", 10, None, "Doctor10", 10)
+
+doctor11=Doctor("rinnones", 10, None, "Doctor11", 11)
+doctor12=Doctor("rinnones", 10, None, "Doctor12", 12)
+
+doctor13=Doctor("piel", 10, None, "Doctor13", 13)
+doctor14=Doctor("piel", 10, None, "Doctor14", 14)
+
+doctor15=Doctor("traquea", 10, None, "Doctor15", 15)
+doctor16=Doctor("traquea", 10, None, "Doctor16", 16)
+
+doctor17=Doctor("nariz", 10, None, "Doctor17", 17)
+doctor18=Doctor("nariz", 10, None, "Doctor18", 18)
+
+doctor19=Doctor("esofago", 10, None, "Doctor19", 19)
+doctor20=Doctor("esofago", 10, None, "Doctor20", 20)
+
+doctor21=Doctor("laringe", 10, None, "Doctor21", 21)
+doctor22=Doctor("laringe", 10, None, "Doctor22", 22)
+
+doctor23=Doctor("tiroides", 10, None, "Doctor23", 23)
+doctor24=Doctor("tiroides", 10, None, "Doctor24", 24)
+
+doctor25=Doctor("testiculos", 10, None, "Doctor25", 25)
+doctor26=Doctor("testiculos", 10, None, "Doctor26", 26)
+
 # doctor2=Doctor("pancreas", 10, None, "Doctor2", 2)
 # doctor3=Doctor("pancrea", 10, None, "Doctor3", 3)
-doctor4=Doctor("cerebro", 10, None, "Doctor4", 4)
+# doctor4=Doctor("cerebro", 10, None, "Doctor4", 4)
 # doctor5=Doctor("General", 10, None, "Doctor5", 5)
 # doctor6=Doctor("General", 10, None, "Doctor6", 6)
 # doctor7=Doctor("ovario", 10, None, "Doctor7", 7)
@@ -134,18 +172,26 @@ doctor4=Doctor("cerebro", 10, None, "Doctor4", 4)
 # # aparato6=Apparatus("X-Ray", 6)
 # aparato9=Apparatus("X-Ray", 9)
 # aparato7=Apparatus("AparatoO", 7)
-# aparato8=Apparatus("AparatoO2", 8)
-# aparato9= Cirugia("pancrea",9,5,0)
+
 
 aparato1=Apparatus("AparatoP", 1)
-# aparato2=Apparatus("AparatoP", 2)
-aparato3=Apparatus("X-Ray", 3)
-# aparato4=Apparatus("X-Ray", 4)
-# aparato5=Apparatus("X-Ray", 5)
-# aparato6=Apparatus("X-Ray", 6)
-# aparato9=Apparatus("X-Ray", 9)
-# aparato7=Apparatus("AparatoO", 7)
+aparato2=Apparatus("AparatoP", 2)
 
+aparato3=Apparatus("X-Ray", 3)
+aparato4=Apparatus("X-Ray", 4)
+
+aparato5=Apparatus("AparatoM", 5)
+aparato6=Apparatus("AparatoM", 6)
+
+aparato10=Apparatus("X-Ray", 5)
+aparato11=Apparatus("X-Ray", 6)
+
+aparato9=Apparatus("X-Ray", 9)
+
+aparato7=Apparatus("AparatoO", 7)
+aparato8=Apparatus("AparatoO", 8)
+
+# aparato9= Cirugia("pancrea",9,5,0)
 
 # paciente1=Pacient(None, None, ["pancrea", "ovario"], "1")
 # paciente2=Pacient("pancrea", "Cirugia", None, "2")
@@ -164,12 +210,13 @@ aparato3=Apparatus("X-Ray", 3)
 
 #-----------------------------Rellenar las listas necesarias ---------------------------------------------------------------------------------
 
-# pacientes=[paciente1, paciente2, paciente7, paciente3, paciente4, paciente5, paciente6, paciente8, paciente9, paciente10]
-# doctors=[doctor1, doctor2, doctor3, doctor4, doctor5, doctor6, doctor7, doctor8, doctor9, doctor10, doctor11]
-# aparatos=[aparato1, aparato2, aparato3, aparato4, aparato5, aparato6, aparato7, aparato8, aparato9]
+pacientes=[paciente1, paciente2, paciente7, paciente3, paciente4, paciente5, paciente6, paciente8, paciente9, paciente10]
+doctors=[doctor1, doctor2, doctor3, doctor4, doctor5, doctor6, doctor7, doctor8, doctor9, doctor10, doctor11,
+doctor12, doctor13, doctor14, doctor15, doctor16, doctor17, doctor18, doctor19, doctor20, doctor21, doctor22, doctor23, doctor24, doctor25, doctor26]
+aparatos=[aparato1, aparato2, aparato3, aparato4, aparato5, aparato6, aparato7, aparato8, aparato9]
 
-doctors=[doctor1, doctor4]
-aparatos=[aparato1, aparato3]
+# doctors=[doctor1, doctor4]
+# aparatos=[aparato1, aparato3]
 
 
 rel_terapia_aparato={}
@@ -179,9 +226,6 @@ rel_terapia_aparato[("ovarios", "quimioterapia")]="AparatoO"
 rel_terapia_aparato[(None, "suero")]="Suero"
 rel_terapia_aparato[(None, "radioterapia")]="X-Ray"
 
-number_pacients=10
-number_of_doctors=10
-number_of_apparatus=9
 
 
 enfermedad_dicc={"pancreas":Solution(), "ovarios":Solution(), "cerebro":Solution(), "mama":Solution(), "higado":Solution(), "rinnones":Solution(), "piel":Solution(), "traquea":Solution(),
@@ -250,7 +294,7 @@ def fill_dicc(pacientes_list, pac_rel_doct_sala_apar_dicc, cirugias, aparatos):
             for doctor in terapias_dicc[paciente.type_tumor].doctors:
                 if doctor.available:
                     temp.doctors.append(doctor)
-            if paciente.therapies_receiving == "Cirugia":
+            if paciente.therapies_receiving == "cirugia":
                 aparato_cir=Cirugia(paciente.type_tumor,len(aparatos)+1 ,cirugias[paciente.type_tumor],0)
                 aparatos.append(aparato_cir)
                 temp.apparatus.append(aparato_cir)
@@ -284,7 +328,7 @@ def fill_dicc(pacientes_list, pac_rel_doct_sala_apar_dicc, cirugias, aparatos):
 # print(aparatos_graph)
 
 #------------------------------------Crear los grafos----------------------------------------------------------------------------------------------
-def fill_graph(pacientes_list, doctores):
+def fill_graph(pacientes_list, doctores, aparatos):
     doctors_graph=Graph(pacientes_list)
     aparatos_graph=Graph(pacientes_list)
     for paciente1 in pacientes_list:
@@ -308,14 +352,20 @@ def fill_graph(pacientes_list, doctores):
                         doctors_graph.insert(paciente1, paciente2)
                         aparatos_graph.insert(paciente1, paciente2)
                     else:
-                        aparatos_graph.insert(paciente1, paciente2)
+                        aparato_general=[item for item in aparatos if item.name == "X-Ray"]
+                        if len(aparato_general) > 0:
+                            aparatos_graph.insert(paciente1, paciente2)
+                        # aparatos_graph.insert(paciente1, paciente2)
 
                 elif not paciente1.possibles_tumors == None and not paciente2.type_tumor == None:
                     if paciente2.type_tumor in paciente1.possibles_tumors:
                         doctors_graph.insert(paciente1, paciente2)
                         aparatos_graph.insert(paciente1, paciente2)
                     else:
-                        aparatos_graph.insert(paciente1, paciente2)
+                        aparato_general=[item for item in aparatos if item.name == "X-Ray"]
+                        if len(aparato_general) > 0:
+                            aparatos_graph.insert(paciente1, paciente2)
+                        # aparatos_graph.insert(paciente1, paciente2)
 
                 elif not paciente1.possibles_tumors == None and not paciente2.possibles_tumors == None:
                     for tumor1 in  paciente1.possibles_tumors:
@@ -323,6 +373,9 @@ def fill_graph(pacientes_list, doctores):
                             doctors_graph.insert(paciente1, paciente2)
                             aparatos_graph.insert(paciente1, paciente2)
                             break
+                    aparato_general=[item for item in aparatos if item.name == "X-Ray"]
+                    if len(aparato_general) > 0:
+                        aparatos_graph.insert(paciente1, paciente2)
     return doctors_graph, aparatos_graph
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -468,6 +521,15 @@ def doctores_aparatos_no_repetidos(lista, tipo, csp):
             return False
     return True
 
+def valid_csp(csp):
+    csp_copy=csp.copy()
+    for pacient, solution in csp_copy.items():
+        if len(solution.apparatus) >1:
+            csp[pacient].apparatus=[csp[pacient].apparatus[0]]
+        if len(solution.doctors) >1:
+            csp[pacient].doctors=[csp[pacient].doctors[0]]
+    return csp
+
 #-----------------------------------------------------------------------------------------------------------------------------------
 
 #-------------------------------------------------------Metodo principal-----------------------------------------------------------------------------
@@ -572,7 +634,7 @@ def ac_3(csp, doctors_queue, aparatos_queue, pacient_dicc, list_marks_doctors, l
 
         if valid_solution(csp):
             return csp
-    return csp
+    return valid_csp(csp)
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -583,29 +645,32 @@ def busqueda(list1, list2, pac1, pac2, queue, csp, csp_copy, list_marks, tipo, g
         actualizar_dominio(pac1, list1[0], tipo, csp)
         return csp, queue
     else:
-        for item1 in list1:
-            for item2 in list2:
-                if not item1 == item2:
-                    if tipo == "doctors":
-                        pac1.doctor=item1
-                        pac2.doctor=item2
-                    else:
-                        pac1.apparatus=item1
-                        pac2.apparatus=item2
+        if len(list1) > 0 and len(list2) > 0:
+            for item1 in list1.copy():
+                for item2 in list2.copy():
+                    if not item1 == item2:
+                        if tipo == "doctors":
+                            pac1.doctor=item1
+                            pac2.doctor=item2
+                        else:
+                            pac1.apparatus=item1
+                            pac2.apparatus=item2
 
-                    actualizar_dominio(pac1, item1, tipo, csp)
-                    actualizar_dominio(pac2, item2, tipo, csp)
+                        actualizar_dominio(pac1, item1, tipo, csp)
+                        actualizar_dominio(pac2, item2, tipo, csp)
 
-                    if check_domain(csp):
-                        for x_k in neighbors(pac1, tipo,graph):
-                            if tipo=="doctors" and not arista_Existente(queue, list_marks, x_k, pac1):
-                                queue.append(Edge(x_k, pac1))
-                            elif tipo=="aparatos" and not arista_Existente(queue, list_marks, x_k,pac1):
-                                queue.append(Edge(x_k, pac1))
-                        return csp, queue
-                        
-                    else:
-                        csp=copy.deepcopy(csp_copy)
+                        if check_domain(csp):
+                            for x_k in neighbors(pac1, tipo,graph):
+                                if tipo=="doctors" and not arista_Existente(queue, list_marks, x_k, pac1):
+                                    queue.append(Edge(x_k, pac1))
+                                elif tipo=="aparatos" and not arista_Existente(queue, list_marks, x_k,pac1):
+                                    queue.append(Edge(x_k, pac1))
+                            return csp, queue
+                            
+                        else:
+                            csp=copy.deepcopy(csp_copy)
+        else:
+            return csp, queue
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -637,14 +702,14 @@ def hospital_simulation(pacientes, aparatos, cirugias, doctors):
 
 
     time=0
-    while(time < 10):
+    while(time < 2):
 
         pacientes_list=pacientes[pos_inicial:pos_inicial + cant_pacientes]
 
 
         pacientes_rel_doct_apar_dicc={}
         aparatos, pacientes_rel_doct_apar_dicc=fill_dicc(pacientes_list, pacientes_rel_doct_apar_dicc, cirugias, aparatos)
-        doctors_graph, aparatos_graph = fill_graph(pacientes_list, doctors)
+        doctors_graph, aparatos_graph = fill_graph(pacientes_list, doctors, aparatos)
 
 
         ac_3=backtracking_search(edge_sort(doctors_graph, "doctors",pacientes_rel_doct_apar_dicc.copy()), edge_sort(aparatos_graph, "aparatos",pacientes_rel_doct_apar_dicc.copy()), pacientes_rel_doct_apar_dicc.copy(), doctors_graph, aparatos_graph, doctors, aparatos)
@@ -706,11 +771,14 @@ def hospital_simulation(pacientes, aparatos, cirugias, doctors):
 
     return csp_list
 
-paciente1=Pacient("cerebro", "radioterapia", [],1)
-paciente2= Pacient("ovarios", 'quimioterapia', [], 2)
-paciente3=Pacient("cerebro", "radioterapia", [],3)
-paciente4= Pacient("mama", 'radioterapia', [], 4)
-paciente5=Pacient("pancreas", "radioterapia", [], 5)
-paciente6=Pacient("pancreas", "quimioterapia", [], 6)
-# hospital_simulation([paciente1, paciente2, paciente3, paciente4,paciente5, paciente6], aparatos, cirugias, doctors)
+# paciente1=Pacient(None, None, ["cerebro", "pancreas"],1)
+# paciente2= Pacient(None, None, ["ovarios"],2)
+
+# paciente1=Pacient("cerebro", "radioterapia", [],1)
+# paciente2= Pacient("ovarios", 'quimioterapia', [], 2)
+# paciente3=Pacient("cerebro", "radioterapia", [],3)
+# paciente4= Pacient("mama", 'radioterapia', [], 4)
+# paciente5=Pacient("pancreas", "radioterapia", [], 5)
+# paciente6=Pacient("pancreas", "quimioterapia", [], 6)
+# hospital_simulation([paciente1, paciente2], aparatos, cirugias, doctors)
 
